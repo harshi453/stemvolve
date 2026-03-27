@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>STEMvolve — Find your path. Own your future.</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: "#1B2B6B",
+accent: "#FF6B00"
+},
+fontFamily: {
+sans: ["Inter", "sans-serif"]
+}
+}
+}
+}
+</script>
+
+<style>
+html {
+scroll-behavior:smooth;
+}
+</style>
+
+</head>
+
+<body class="bg-white text-gray-800">
+
+<!-- NAVBAR -->
+
+<nav class="fixed w-full bg-white shadow z-50">
+
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+<div class="text-2xl font-bold text-primary">
+STEM<span class="text-accent">volve</span>
+</div>
+
+<div class="hidden md:flex space-x-8 items-center">
+
+<a href="#home">Home</a>
+<a href="#careers">Careers</a>
+<a href="#quiz">Quiz</a>
+<a href="#resources">Resources</a>
+<a href="#interviews">Interviews</a>
+<a href="#about">About</a>
+
+<button onclick="openAuth()" class="bg-accent text-white px-5 py-2 rounded-lg">
+Login / Signup
+</button>
+
+</div>
+
+<button id="menuBtn" class="md:hidden">
+☰
+</button>
+
+</div>
+
+<div id="mobileMenu" class="hidden md:hidden px-6 pb-4 space-y-2">
+
+<a href="#home">Home</a>
+<a href="#careers">Careers</a>
+<a href="#quiz">Quiz</a>
+<a href="#resources">Resources</a>
+<a href="#interviews">Interviews</a>
+<a href="#about">About</a>
+
+<button onclick="openAuth()" class="w-full bg-accent text-white py-2 rounded">
+Login
+</button>
+
+</div>
+
+</nav>
+
+<!-- HERO -->
+
+<section id="home" class="pt-32 pb-20 text-center">
+
+<h1 class="text-6xl font-extrabold text-primary">
+Find your path.
+<span class="text-accent">Own your future.</span>
+</h1>
+
+<p class="mt-6 text-gray-600 max-w-xl mx-auto">
+A nonprofit career discovery platform for students aged 11–18.
+Built by students, for students.
+</p>
+
+<button 
+onclick="scrollToCareers()"
+class="mt-8 bg-accent text-white px-8 py-4 rounded-xl">
+Explore Careers
+</button>
+
+</section>
+
+<!-- CAREERS -->
+
+<section id="careers" class="py-20 px-6">
+
+<h2 class="text-4xl font-bold text-primary text-center">
+Explore Careers
+</h2>
+
+<div class="grid md:grid-cols-4 gap-4 mt-10">
+
+<input id="searchInput" placeholder="Search..." class="border px-4 py-3 rounded-xl"/>
+
+<select id="industryFilter" class="border px-4 py-3 rounded-xl">
+<option value="">Industry</option>
+<option>Technology</option>
+<option>Healthcare</option>
+<option>Engineering</option>
+<option>Business</option>
+<option>Science</option>
+</select>
+
+<select id="difficultyFilter" class="border px-4 py-3 rounded-xl">
+<option value="">Difficulty</option>
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+</select>
+
+<select id="salaryFilter" class="border px-4 py-3 rounded-xl">
+<option value="">Salary</option>
+<option value="50000">$50k+</option>
+<option value="80000">$80k+</option>
+<option value="120000">$120k+</option>
+<option value="150000">$150k+</option>
+</select>
+
+</div>
+
+<div id="careersGrid" class="grid md:grid-cols-3 gap-8 mt-12"></div>
+
+</section>
+
+<!-- QUIZ -->
+
+<section id="quiz" class="py-20 px-6 bg-gray-50">
+
+<h2 class="text-4xl text-center font-bold text-primary">
+Career Quiz
+</h2>
+
+<div class="max-w-3xl mx-auto mt-10">
+
+<div class="bg-gray-200 rounded-full h-3">
+<div id="quizProgress" class="bg-accent h-3 rounded-full"></div>
+</div>
+
+<h3 id="quizQuestion" class="mt-8 text-xl font-semibold"></h3>
+
+<div id="quizAnswers" class="mt-6 space-y-4"></div>
+
+<div class="flex justify-between mt-8">
+<button onclick="prevQuestion()" class="border px-6 py-2 rounded">Back</button>
+<button onclick="nextQuestion()" class="bg-accent text-white px-6 py-2 rounded">Next</button>
+</div>
+
+</div>
+
+</section>
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="hidden py-20 px-6">
+
+<h2 class="text-4xl font-bold text-primary">
+Dashboard
+</h2>
+
+<h3 class="mt-10 text-2xl font-semibold">Saved Careers</h3>
+
+<div id="savedCareers" class="grid md:grid-cols-3 gap-6 mt-6"></div>
+
+</section>
+
+<!-- AUTH MODAL -->
+
+<div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+
+<div class="bg-white p-8 rounded-2xl max-w-md w-full">
+
+<h2 id="authTitle" class="text-2xl font-bold">Login</h2>
+
+<input id="nameInput" placeholder="Name" class="hidden w-full border p-3 mt-4 rounded"/>
+
+<input id="gradeInput" placeholder="Grade" class="hidden w-full border p-3 mt-4 rounded"/>
+
+<input id="emailInput" placeholder="Email" class="w-full border p-3 mt-4 rounded"/>
+
+<input id="passwordInput" type="password" placeholder="Password" class="w-full border p-3 mt-4 rounded"/>
+
+<button onclick="submitAuth()" class="w-full bg-accent text-white py-3 mt-4 rounded">
+Continue
+</button>
+
+<p onclick="toggleAuth()" class="text-center mt-3 cursor-pointer text-accent">
+Create Account
+</p>
+
+</div>
+
+</div>
+<!-- CAREER MODAL -->
+
+<div id="careerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-6">
+
+<div class="bg-white max-w-3xl w-full p-8 rounded-2xl relative">
+
+<button onclick="closeCareer()" class="absolute right-4 top-4 text-xl">
+✕
+</button>
+
+<div id="careerContent"></div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<footer class="bg-primary text-white py-14 text-center">
+
+<h3 class="text-xl font-bold">
+STEM<span class="text-accent">volve</span>
+</h3>
+
+<p class="mt-3">
+Find your path. Own your future.
+</p>
+
+<p class="mt-6 text-gray-300">
+Built by students for students
+</p>
+
+</footer>
+
+
+<script>
+
+/* MOBILE MENU */
+
+menuBtn.onclick = ()=>{
+mobileMenu.classList.toggle("hidden")
+}
+
+
+/* USERS */
+
+let currentUser = JSON.parse(localStorage.getItem("currentUser"))
+let users = JSON.parse(localStorage.getItem("users")) || []
+
+/* AUTH */
+
+let isSignup=false
+
+function openAuth(){
+authModal.classList.remove("hidden")
+}
+
+function toggleAuth(){
+
+isSignup=!isSignup
+
+authTitle.innerText=isSignup?"Create Account":"Login"
+
+nameInput.classList.toggle("hidden")
+gradeInput.classList.toggle("hidden")
+
+}
+
+function submitAuth(){
+
+const email=emailInput.value
+const password=passwordInput.value
+
+if(isSignup){
+
+const user={
+id:Date.now(),
+name:nameInput.value,
+grade:gradeInput.value,
+email,
+password,
+favorites:[],
+quizResults:[]
+}
+
+users.push(user)
+
+localStorage.setItem("users",JSON.stringify(users))
+localStorage.setItem("currentUser",JSON.stringify(user))
+
+currentUser=user
+
+}else{
+
+const user=users.find(u=>u.email===email&&u.password===password)
+
+if(!user){
+alert("Invalid login")
+return
+}
+
+currentUser=user
+
+localStorage.setItem("currentUser",JSON.stringify(user))
+
+}
+
+authModal.classList.add("hidden")
+
+updateDashboard()
+
+}
+
+
+/* CAREERS DATABASE */
+
+let careers=JSON.parse(localStorage.getItem("careers"))||[
+
+{
+id:1,
+name:"Computer Hardware Engineer",
+industry:"Engineering",
+salary:120000,
+difficulty:4,
+description:"Design computer components",
+daily:"Design hardware systems",
+highschool:"Math Physics Coding",
+time:"4-6 years",
+video:"https://www.youtube.com/embed/2ePf9rue1Ao"
+},
+
+{
+id:2,
+name:"AI Engineer",
+industry:"Technology",
+salary:150000,
+difficulty:5,
+description:"Build AI systems",
+daily:"Train AI models",
+highschool:"Math Coding",
+time:"4-8 years",
+video:"https://www.youtube.com/embed/JMUxmLyrhSk"
+},
+
+{
+id:3,
+name:"Biomedical Engineer",
+industry:"Healthcare",
+salary:95000,
+difficulty:4,
+description:"Create medical devices",
+daily:"Design hospital equipment",
+highschool:"Biology Chemistry",
+time:"4-6 years",
+video:"https://www.youtube.com/embed/k9K2xj8L7oE"
+}
+
+]
+
+
+/* DISPLAY CAREERS */
+
+function displayCareers(){
+
+const search=searchInput.value.toLowerCase()
+const industry=industryFilter.value
+const difficulty=difficultyFilter.value
+const salary=salaryFilter.value
+
+careersGrid.innerHTML=""
+
+careers
+.filter(c=>
+
+c.name.toLowerCase().includes(search)&&
+(!industry||c.industry===industry)&&
+(!difficulty||c.difficulty==difficulty)&&
+(!salary||c.salary>=salary)
+
+)
+
+.forEach(c=>{
+
+careersGrid.innerHTML+=`
+
+<div 
+onclick="openCareer(${c.id})"
+class="p-6 shadow rounded-xl cursor-pointer">
+
+<h3 class="text-xl font-bold text-primary">
+${c.name}
+</h3>
+
+<p class="text-gray-500">
+${c.industry}
+</p>
+
+<p class="mt-2">
+${c.description}
+</p>
+
+<div class="flex justify-between mt-4">
+
+<span class="text-accent">
+$${c.salary}
+</span>
+
+<span>
+${c.difficulty}/5
+</span>
+
+</div>
+
+</div>
+
+`
+
+})
+
+}
+
+displayCareers()
+
+document.addEventListener("input",displayCareers)
+document.addEventListener("change",displayCareers)
+
+
+/* CAREER MODAL */
+
+function openCareer(id){
+
+const c=careers.find(x=>x.id===id)
+
+careerContent.innerHTML=`
+
+<h2 class="text-3xl font-bold text-primary">
+${c.name}
+</h2>
+
+<p class="mt-2">${c.description}</p>
+
+<div class="mt-6 grid md:grid-cols-2 gap-6">
+
+<div>
+<h4 class="font-semibold">Daily Work</h4>
+<p>${c.daily}</p>
+</div>
+
+<div>
+<h4 class="font-semibold">Salary</h4>
+<p>$${c.salary}</p>
+</div>
+
+<div>
+<h4 class="font-semibold">Difficulty</h4>
+<p>${c.difficulty}/5</p>
+</div>
+
+<div>
+<h4 class="font-semibold">High School</h4>
+<p>${c.highschool}</p>
+</div>
+
+</div>
+
+<iframe 
+class="w-full h-64 mt-6 rounded-xl"
+src="${c.video}"
+allowfullscreen>
+</iframe>
+
+<button 
+onclick="saveFavorite(${c.id})"
+class="mt-6 bg-accent text-white px-6 py-3 rounded">
+Save
+</button>
+
+`
+
+careerModal.classList.remove("hidden")
+
+}
+
+function closeCareer(){
+careerModal.classList.add("hidden")
+}
+
+
+/* FAVORITES */
+
+function saveFavorite(id){
+
+if(!currentUser){
+openAuth()
+return
+}
+
+if(!currentUser.favorites.includes(id))
+currentUser.favorites.push(id)
+
+localStorage.setItem("currentUser",JSON.stringify(currentUser))
+
+updateDashboard()
+
+}
+
+
+/* DASHBOARD */
+
+function updateDashboard(){
+
+if(!currentUser)return
+
+dashboard.classList.remove("hidden")
+
+savedCareers.innerHTML=""
+
+currentUser.favorites.forEach(id=>{
+
+const c=careers.find(x=>x.id===id)
+
+savedCareers.innerHTML+=`
+
+<div class="p-6 shadow rounded">
+
+<h3 class="font-bold text-primary">
+${c.name}
+</h3>
+
+<p>${c.industry}</p>
+
+</div>
+
+`
+
+})
+
+}
+
+updateDashboard()
+
+
+/* 20 QUESTION QUIZ */
+
+let quizQuestions=[
+"Do you enjoy solving complex problems?",
+"Do you enjoy helping people?",
+"Do you like working with technology?",
+"Do you enjoy leadership roles?",
+"Do you enjoy math?",
+"Do you enjoy science?",
+"Do you like creativity?",
+"Do you like teamwork?",
+"Do you enjoy building things?",
+"Do you enjoy research?",
+"Do you enjoy business?",
+"Do you enjoy coding?",
+"Do you enjoy teaching?",
+"Do you enjoy designing?",
+"Do you enjoy innovation?",
+"Do you enjoy working outdoors?",
+"Do you enjoy healthcare?",
+"Do you enjoy engineering?",
+"Do you enjoy entrepreneurship?",
+"Do you enjoy discovery?"
+]
+
+let quizIndex=0
+let quizAnswers=[]
+
+function loadQuestion(){
+
+quizQuestion.innerText=
+(quizIndex+1)+". "+quizQuestions[quizIndex]
+
+quizAnswersDiv=""
+
+quizAnswers.innerHTML=`
+
+<div onclick="selectAnswer(1)" class="p-4 border rounded cursor-pointer">
+Yes
+</div>
+
+<div onclick="selectAnswer(0)" class="p-4 border rounded cursor-pointer">
+No
+</div>
+
+`
+
+quizProgress.style.width=
+((quizIndex+1)/20*100)+"%"
+
+}
+
+loadQuestion()
+
+function selectAnswer(a){
+quizAnswers[quizIndex]=a
+}
+
+function nextQuestion(){
+
+if(quizIndex<19){
+quizIndex++
+loadQuestion()
+}else{
+showResults()
+}
+
+}
+
+function prevQuestion(){
+
+if(quizIndex>0){
+quizIndex--
+loadQuestion()
+}
+
+}
+
+function showResults(){
+
+const score=quizAnswers.reduce((a,b)=>a+b,0)
+
+let result=""
+
+if(score>15) result="Technology & Engineering"
+else if(score>10) result="Science & Healthcare"
+else result="Business & Creative"
+
+quiz.innerHTML=`
+
+<h2 class="text-3xl font-bold text-center">
+Your Result
+</h2>
+
+<div class="mt-10 text-center text-xl">
+${result}
+</div>
+
+`
+
+}
+
+
+function scrollToCareers(){
+document.getElementById("careers").scrollIntoView()
+}
+
+</script>
+
+</body>
+</html>
