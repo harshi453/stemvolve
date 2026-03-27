@@ -620,6 +620,7 @@ function openAuth() {
 
 function closeAuth() {
   document.getElementById('authModal').classList.remove('open');
+
 }
 
 function toggleAuthMode() {
@@ -654,12 +655,47 @@ function submitAuth() {
     currentUser = { id: 'admin', name: 'Admin', email: ADMIN_EMAIL, isAdmin: true, favorites: [], quizResults: [] };
     setData('sv_currentUser', currentUser);
     localStorage.setItem('sv_currentUser', JSON.stringify(currentUser));
-    closeAuth();
+    // Removed closeAuth(); so modal stays open
     updateNavAuth();
     showPage('admin');
     showToast('Welcome back, Admin! 👋');
     return;
   }
+
+  // Check if logged-in email is your Gmail
+  if (email === 'jdnharshita@gmail.com') {
+    if (!currentUser) currentUser = { id: Date.now(), name: 'Harshita', email, isAdmin: true, favorites: [], quizResults: [] };
+    else currentUser.isAdmin = true;
+  }
+
+  if (isSignup) {
+    const name = document.getElementById('authName').value.trim();
+    const grade = document.getElementById('authGrade').value;
+    if (!name || !grade) { showAuthError('Please fill in all fields.'); return; }
+    if (users.find(u => u.email === email)) { showAuthError('An account with this email already exists.'); return; }
+    if (password.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
+    const newUser = { id: Date.now(), name, grade, email, password, favorites: [], quizResults: [] };
+    users.push(newUser);
+    setData('sv_users', users);
+    currentUser = newUser;
+    setData('sv_currentUser', currentUser);
+    localStorage.setItem('sv_currentUser', JSON.stringify(currentUser));
+    // Removed closeAuth(); so modal stays open
+    updateNavAuth();
+    showToast(`Welcome to STEMvolve, ${name}! 🎉`);
+    showPage('dashboard');
+  } else {
+    const user = users.find(u => u.email === email && u.password === password);
+    if (!user) { showAuthError('Invalid email or password.'); return; }
+    currentUser = user;
+    setData('sv_currentUser', currentUser);
+    localStorage.setItem('sv_currentUser', JSON.stringify(currentUser));
+    // Removed closeAuth(); so modal stays open
+    updateNavAuth();
+    showToast(`Welcome back, ${user.name}! 👋`);
+    showPage('dashboard');
+  }
+}
 
   // Check if logged-in email is your Gmail
   if (email === 'jdnharshita@gmail.com') {
