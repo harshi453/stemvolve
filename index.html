@@ -5,282 +5,1085 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>STEMvolve — Find your path. Own your future.</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Inter', sans-serif; background-color: #1B2B6B; color: #fff; }
-a { text-decoration: none; }
-button { cursor: pointer; transition: 0.3s; }
-button:hover { opacity: 0.9; }
-.card { background-color: #162151; }
-input, select { background-color: #fff; color: #000; }
+  :root {
+    --navy: #0D1B4B;
+    --navy-light: #162260;
+    --orange: #FF6B00;
+    --orange-light: #FF8C33;
+    --white: #FFFFFF;
+    --gray: #A0AEC0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); }
+  h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+  /* NAVBAR */
+  .navbar { position: fixed; top: 0; width: 100%; background: rgba(13,27,75,0.95); backdrop-filter: blur(12px); z-index: 1000; border-bottom: 1px solid rgba(255,107,0,0.15); }
+  .nav-logo { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; }
+  .nav-link { color: #A0AEC0; transition: color 0.2s; font-size: 0.9rem; font-weight: 500; }
+  .nav-link:hover { color: var(--orange); }
+  .btn-orange { background: var(--orange); color: white; padding: 0.5rem 1.25rem; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s, transform 0.1s; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; }
+  .btn-orange:hover { background: var(--orange-light); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--orange); padding: 0.5rem 1.25rem; border-radius: 8px; font-weight: 600; border: 2px solid var(--orange); cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; }
+  .btn-outline:hover { background: var(--orange); color: white; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 6rem 1.5rem 3rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(255,107,0,0.12) 0%, transparent 70%); pointer-events: none; }
+  .hero-badge { display: inline-block; background: rgba(255,107,0,0.15); border: 1px solid rgba(255,107,0,0.3); color: var(--orange); padding: 0.35rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem; letter-spacing: 0.05em; }
+  .hero h1 { font-size: clamp(2.5rem, 7vw, 5rem); line-height: 1.1; font-weight: 800; }
+  .hero h1 span { color: var(--orange); }
+  .hero p { color: var(--gray); max-width: 520px; margin: 1.5rem auto 0; font-size: 1.1rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
+  .btn-big { padding: 0.85rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .btn-big-orange { background: var(--orange); color: white; }
+  .btn-big-orange:hover { background: var(--orange-light); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,107,0,0.3); }
+  .btn-big-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); }
+  .btn-big-outline:hover { border-color: var(--orange); color: var(--orange); }
+  .stats { display: flex; gap: 3rem; justify-content: center; margin-top: 4rem; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--orange); }
+  .stat-label { font-size: 0.85rem; color: var(--gray); margin-top: 0.25rem; }
+
+  /* SECTIONS */
+  .section { padding: 5rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 0.75rem; }
+  .section-title span { color: var(--orange); }
+  .section-sub { color: var(--gray); font-size: 1rem; margin-bottom: 3rem; }
+  .divider { width: 100%; height: 1px; background: rgba(255,255,255,0.07); margin: 0; }
+
+  /* CARDS */
+  .card { background: var(--navy-light); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 1.5rem; transition: all 0.25s; cursor: pointer; }
+  .card:hover { border-color: rgba(255,107,0,0.4); transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+  .card-tag { display: inline-block; background: rgba(255,107,0,0.15); color: var(--orange); padding: 0.2rem 0.7rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem; }
+  .card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .card p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.07); }
+  .salary { color: var(--orange); font-weight: 700; font-size: 0.9rem; }
+  .diff { background: rgba(255,255,255,0.08); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.8rem; color: var(--gray); }
+
+  /* FILTERS */
+  .filters { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 2rem; }
+  @media(max-width:768px){ .filters { grid-template-columns: 1fr; } }
+  .filter-input { background: var(--navy-light); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 0.75rem 1rem; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; transition: border-color 0.2s; }
+  .filter-input:focus { outline: none; border-color: var(--orange); }
+  .filter-input option { background: var(--navy-light); color: white; }
+
+  /* QUIZ */
+  .quiz-wrap { max-width: 680px; margin: 0 auto; }
+  .progress-bar { background: rgba(255,255,255,0.1); border-radius: 999px; height: 6px; margin-bottom: 2.5rem; overflow: hidden; }
+  .progress-fill { background: var(--orange); height: 100%; border-radius: 999px; transition: width 0.4s ease; }
+  .quiz-q { font-size: 1.3rem; font-weight: 700; margin-bottom: 1.5rem; font-family: 'Syne', sans-serif; }
+  .quiz-opt { background: var(--navy-light); border: 2px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; cursor: pointer; transition: all 0.2s; font-size: 0.95rem; text-align: left; width: 100%; color: white; font-family: 'DM Sans', sans-serif; }
+  .quiz-opt:hover { border-color: var(--orange); background: rgba(255,107,0,0.08); }
+  .quiz-opt.selected { border-color: var(--orange); background: rgba(255,107,0,0.15); color: var(--orange); font-weight: 600; }
+  .quiz-nav { display: flex; justify-content: space-between; margin-top: 2rem; }
+
+  /* RESOURCES */
+  .resource-card { background: var(--navy-light); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 1.5rem; display: flex; align-items: flex-start; gap: 1rem; transition: all 0.2s; }
+  .resource-card:hover { border-color: rgba(255,107,0,0.4); transform: translateY(-3px); }
+  .resource-icon { font-size: 2rem; flex-shrink: 0; }
+  .resource-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .resource-card p { color: var(--gray); font-size: 0.85rem; line-height: 1.5; }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  @media(max-width:768px){ .about-grid { grid-template-columns: 1fr; } }
+  .about-text p { color: var(--gray); line-height: 1.8; margin-bottom: 1rem; }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .team-card { background: var(--navy-light); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.5rem 1rem; text-align: center; }
+  .team-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), #FF8C33); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 0.75rem; }
+  .team-card h4 { font-size: 0.95rem; font-weight: 700; }
+  .team-card p { color: var(--gray); font-size: 0.8rem; margin-top: 0.25rem; }
+
+  /* INTERVIEWS */
+  .interview-card { background: var(--navy-light); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; overflow: hidden; transition: all 0.25s; }
+  .interview-card:hover { border-color: rgba(255,107,0,0.4); transform: translateY(-4px); }
+  .interview-video { width: 100%; aspect-ratio: 16/9; background: #000; }
+  .interview-info { padding: 1.25rem; }
+  .interview-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .interview-info p { color: var(--gray); font-size: 0.85rem; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: var(--navy-light); border: 1px solid rgba(255,107,0,0.2); border-radius: 20px; max-width: 480px; width: 100%; padding: 2rem; position: relative; max-height: 90vh; overflow-y: auto; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: rgba(255,255,255,0.08); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .modal-close:hover { background: rgba(255,107,0,0.3); }
+  .modal-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; }
+  .modal-input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 0.85rem 1rem; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; margin-bottom: 0.75rem; transition: border-color 0.2s; }
+  .modal-input:focus { outline: none; border-color: var(--orange); }
+  .modal-input::placeholder { color: rgba(255,255,255,0.35); }
+  .modal-input option { background: var(--navy-light); }
+  .modal-switch { text-align: center; margin-top: 1rem; color: var(--gray); font-size: 0.9rem; }
+  .modal-switch span { color: var(--orange); cursor: pointer; font-weight: 600; }
+  .modal-switch span:hover { text-decoration: underline; }
+  .error-msg { background: rgba(255,50,50,0.1); border: 1px solid rgba(255,50,50,0.3); color: #FF6B6B; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 0.75rem; display: none; }
+
+  /* CAREER MODAL */
+  .career-modal-box { max-width: 700px; }
+  .career-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+  @media(max-width:600px){ .career-detail-grid { grid-template-columns: 1fr; } }
+  .detail-item { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 1rem; }
+  .detail-item h4 { font-size: 0.75rem; color: var(--orange); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+  .detail-item p { font-size: 0.9rem; color: var(--gray); }
+
+  /* DASHBOARD */
+  .dash-section { margin-bottom: 2.5rem; }
+  .dash-section h3 { font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+  .empty-state { text-align: center; padding: 2.5rem; color: var(--gray); background: var(--navy-light); border-radius: 14px; border: 1px dashed rgba(255,255,255,0.1); }
+
+  /* ADMIN */
+  .admin-form input, .admin-form select, .admin-form textarea { width: 100%; background: var(--navy-light); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 0.85rem 1rem; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; margin-bottom: 0.75rem; transition: border-color 0.2s; }
+  .admin-form input:focus, .admin-form select:focus, .admin-form textarea:focus { outline: none; border-color: var(--orange); }
+  .admin-form input::placeholder, .admin-form textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .admin-form select option { background: var(--navy-light); }
+  .admin-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  .admin-table th { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--orange); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .admin-table td { padding: 0.85rem 1rem; font-size: 0.9rem; color: var(--gray); border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
+  .admin-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .badge-del { background: rgba(255,50,50,0.15); color: #FF6B6B; border: none; padding: 0.3rem 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+  .badge-del:hover { background: rgba(255,50,50,0.3); }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--orange); color: white; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; pointer-events: none; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* FOOTER */
+  footer { background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.07); padding: 3rem 1.5rem; text-align: center; }
+  footer .logo { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; }
+  footer p { color: var(--gray); font-size: 0.85rem; margin-top: 0.5rem; }
+  .social-links { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+  .social-link { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: center; color: var(--gray); text-decoration: none; transition: all 0.2s; font-size: 1rem; }
+  .social-link:hover { background: var(--orange); color: white; }
+
+  /* NAV USER */
+  .user-chip { display: flex; align-items: center; gap: 0.5rem; background: rgba(255,107,0,0.15); border: 1px solid rgba(255,107,0,0.3); padding: 0.4rem 0.9rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; color: var(--orange); cursor: pointer; }
+  .user-chip:hover { background: rgba(255,107,0,0.25); }
+
+  /* PAGE SECTIONS */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* NEWSLETTER */
+  .newsletter { background: linear-gradient(135deg, rgba(255,107,0,0.1), rgba(13,27,75,0.5)); border: 1px solid rgba(255,107,0,0.2); border-radius: 20px; padding: 3rem; text-align: center; margin-top: 4rem; }
+  .newsletter h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .newsletter p { color: var(--gray); margin-bottom: 1.5rem; }
+  .newsletter-form { display: flex; gap: 0.75rem; max-width: 420px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .newsletter-input { flex: 1; min-width: 200px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 0.75rem 1rem; border-radius: 10px; font-family: 'DM Sans', sans-serif; }
+  .newsletter-input:focus { outline: none; border-color: var(--orange); }
+  .newsletter-input::placeholder { color: rgba(255,255,255,0.4); }
+
+  /* GRID LAYOUTS */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem; }
+
+  /* RESPONSIVE NAV */
+  @media(max-width: 768px) {
+    .desktop-nav { display: none !important; }
+    .mobile-nav { display: block !important; }
+  }
+  .mobile-nav { display: none; }
+  .mobile-menu { display: none; background: var(--navy-light); border-top: 1px solid rgba(255,255,255,0.07); padding: 1rem 1.5rem; }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a { display: block; padding: 0.65rem 0; color: var(--gray); font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.05); transition: color 0.2s; }
+  .mobile-menu a:hover { color: var(--orange); }
+
+  /* QUIZ RESULT */
+  .result-card { background: linear-gradient(135deg, rgba(255,107,0,0.15), rgba(13,27,75,0.8)); border: 2px solid rgba(255,107,0,0.3); border-radius: 20px; padding: 2.5rem; text-align: center; }
+  .result-icon { font-size: 4rem; margin-bottom: 1rem; }
+  .result-title { font-size: 1.6rem; font-weight: 800; color: var(--orange); margin-bottom: 0.5rem; }
+  .result-desc { color: var(--gray); line-height: 1.7; }
+  .result-careers { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 1.5rem; }
+  .result-tag { background: rgba(255,107,0,0.15); border: 1px solid rgba(255,107,0,0.3); color: var(--orange); padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
 </style>
 </head>
-<body class="antialiased">
+<body>
 
 <!-- NAVBAR -->
-<nav class="fixed w-full bg-[#1B2B6B] shadow z-50">
-<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-<div class="text-2xl font-bold text-[#FF6B00]">STEM<span class="text-white">volve</span></div>
-<div class="hidden md:flex space-x-8 items-center">
-<a href="#home" class="hover:text-[#FF6B00]">Home</a>
-<a href="#careers" class="hover:text-[#FF6B00]">Careers</a>
-<a href="#quiz" class="hover:text-[#FF6B00]">Quiz</a>
-<a href="#resources" class="hover:text-[#FF6B00]">Resources</a>
-<a href="#interviews" class="hover:text-[#FF6B00]">Interviews</a>
-<a href="#about" class="hover:text-[#FF6B00]">About</a>
-<button onclick="openAuth()" class="bg-[#FF6B00] text-white px-5 py-2 rounded-lg">Login / Signup</button>
-</div>
-<button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
-</div>
-<div id="mobileMenu" class="hidden md:hidden px-6 pb-4 space-y-2">
-<a href="#home" class="block hover:text-[#FF6B00]">Home</a>
-<a href="#careers" class="block hover:text-[#FF6B00]">Careers</a>
-<a href="#quiz" class="block hover:text-[#FF6B00]">Quiz</a>
-<a href="#resources" class="block hover:text-[#FF6B00]">Resources</a>
-<a href="#interviews" class="block hover:text-[#FF6B00]">Interviews</a>
-<a href="#about" class="block hover:text-[#FF6B00]">About</a>
-<button onclick="openAuth()" class="w-full bg-[#FF6B00] text-white py-2 rounded mt-2">Login</button>
-</div>
+<nav class="navbar">
+  <div style="max-width:1100px;margin:0 auto;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;">
+    <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer;">STEM<span style="color:var(--orange)">volve</span></div>
+    <div class="desktop-nav" style="display:flex;gap:1.75rem;align-items:center;">
+      <a onclick="showPage('home')" class="nav-link" style="cursor:pointer;">Home</a>
+      <a onclick="showPage('careers')" class="nav-link" style="cursor:pointer;">Careers</a>
+      <a onclick="showPage('quiz')" class="nav-link" style="cursor:pointer;">Quiz</a>
+      <a onclick="showPage('resources')" class="nav-link" style="cursor:pointer;">Resources</a>
+      <a onclick="showPage('interviews')" class="nav-link" style="cursor:pointer;">Interviews</a>
+      <a onclick="showPage('about')" class="nav-link" style="cursor:pointer;">About</a>
+      <div id="navAuth"></div>
+    </div>
+    <button class="mobile-nav btn-outline" onclick="toggleMobileMenu()">☰ Menu</button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a onclick="showPage('home');closeMobileMenu()">Home</a>
+    <a onclick="showPage('careers');closeMobileMenu()">Careers</a>
+    <a onclick="showPage('quiz');closeMobileMenu()">Quiz</a>
+    <a onclick="showPage('resources');closeMobileMenu()">Resources</a>
+    <a onclick="showPage('interviews');closeMobileMenu()">Interviews</a>
+    <a onclick="showPage('about');closeMobileMenu()">About</a>
+    <div style="margin-top:1rem;" id="mobileNavAuth"></div>
+  </div>
 </nav>
 
-<!-- HERO -->
-<section id="home" class="pt-32 pb-20 text-center">
-<h1 class="text-5xl md:text-6xl font-extrabold text-[#FF6B00]">Find your path. <span class="text-white">Own your future.</span></h1>
-<p class="mt-6 text-gray-300 max-w-xl mx-auto">A nonprofit career discovery platform for students aged 11–18. Built by students, for students.</p>
-<button onclick="scrollToCareers()" class="mt-8 bg-white text-[#FF6B00] px-8 py-4 rounded-xl font-semibold">Explore Careers</button>
-</section>
+<!-- ===== HOME PAGE ===== -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div>
+      <div class="hero-badge">🚀 Built by students, for students</div>
+      <h1>Find your path.<br><span>Own your future.</span></h1>
+      <p>STEMvolve helps middle & high school students aged 11–18 discover their dream career — before it's too late.</p>
+      <div class="hero-btns">
+        <button class="btn-big btn-big-orange" onclick="showPage('careers')">Explore Careers</button>
+        <button class="btn-big btn-big-outline" onclick="showPage('quiz')">Take the Quiz</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-num" id="statCareers">10+</div><div class="stat-label">Careers Listed</div></div>
+        <div class="stat"><div class="stat-num" id="statStudents">0</div><div class="stat-label">Students Joined</div></div>
+        <div class="stat"><div class="stat-num">Free</div><div class="stat-label">Always & Forever</div></div>
+      </div>
+    </div>
+  </section>
 
-<!-- CAREERS -->
-<section id="careers" class="py-20 px-6">
-<h2 class="text-4xl font-bold text-[#FF6B00] text-center">Explore Careers</h2>
-<div class="grid md:grid-cols-4 gap-4 mt-10">
-<input id="searchInput" placeholder="Search..." class="border px-4 py-3 rounded-xl"/>
-<select id="industryFilter" class="border px-4 py-3 rounded-xl">
-<option value="">Industry</option>
-<option>Technology</option>
-<option>Healthcare</option>
-<option>Engineering</option>
-<option>Business</option>
-<option>Science</option>
-</select>
-<select id="difficultyFilter" class="border px-4 py-3 rounded-xl">
-<option value="">Difficulty</option>
-<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-</select>
-<select id="salaryFilter" class="border px-4 py-3 rounded-xl">
-<option value="">Salary</option>
-<option value="50000">$50k+</option>
-<option value="80000">$80k+</option>
-<option value="120000">$120k+</option>
-<option value="150000">$150k+</option>
-</select>
-</div>
-<div id="careersGrid" class="grid md:grid-cols-3 gap-8 mt-12"></div>
-</section>
+  <div style="max-width:1100px;margin:0 auto;padding:0 1.5rem 5rem;">
+    <!-- Features -->
+    <div class="grid-3" style="margin-bottom:5rem;">
+      <div class="card" onclick="showPage('careers')">
+        <div style="font-size:2rem;margin-bottom:1rem;">🎯</div>
+        <h3>Career Explorer</h3>
+        <p style="margin-top:0.5rem;">Browse 100+ career paths with detailed info, salary ranges, and real interview videos.</p>
+      </div>
+      <div class="card" onclick="showPage('quiz')">
+        <div style="font-size:2rem;margin-bottom:1rem;">🧠</div>
+        <h3>Career Quiz</h3>
+        <p style="margin-top:0.5rem;">Answer a few questions and discover which careers match your personality and interests.</p>
+      </div>
+      <div class="card" onclick="showPage('resources')">
+        <div style="font-size:2rem;margin-bottom:1rem;">📚</div>
+        <h3>Free Resources</h3>
+        <p style="margin-top:0.5rem;">Download free guides on how to prepare for your future career starting right now.</p>
+      </div>
+    </div>
 
-<!-- QUIZ -->
-<section id="quiz" class="py-20 px-6 bg-[#162151]">
-<h2 class="text-4xl text-center font-bold text-[#FF6B00]">Career Quiz</h2>
-<div class="max-w-3xl mx-auto mt-10">
-<div class="bg-gray-300 rounded-full h-3">
-<div id="quizProgress" class="bg-[#FF6B00] h-3 rounded-full"></div>
+    <!-- Newsletter -->
+    <div class="newsletter">
+      <h2>Stay in the loop 📬</h2>
+      <p>Get notified when new careers and interviews drop every week.</p>
+      <div class="newsletter-form">
+        <input class="newsletter-input" type="email" placeholder="Your email address" id="newsletterEmail">
+        <button class="btn-orange" onclick="subscribeNewsletter()">Subscribe</button>
+      </div>
+    </div>
+  </div>
 </div>
-<h3 id="quizQuestion" class="mt-8 text-xl font-semibold text-white"></h3>
-<div id="quizAnswers" class="mt-6 space-y-4"></div>
-<div class="flex justify-between mt-8">
-<button onclick="prevQuestion()" class="border px-6 py-2 rounded text-white border-white">Back</button>
-<button onclick="nextQuestion()" class="bg-[#FF6B00] text-white px-6 py-2 rounded">Next</button>
-</div>
-</div>
-</section>
 
-<!-- DASHBOARD -->
-<section id="dashboard" class="hidden py-20 px-6">
-<h2 class="text-4xl font-bold text-[#FF6B00]">Dashboard</h2>
-<h3 class="mt-10 text-2xl font-semibold">Saved Careers</h3>
-<div id="savedCareers" class="grid md:grid-cols-3 gap-6 mt-6"></div>
-</section>
+<!-- ===== CAREERS PAGE ===== -->
+<div id="page-careers" class="page">
+  <div class="section">
+    <h2 class="section-title">Explore <span>Careers</span></h2>
+    <p class="section-sub">Discover your future — search from our growing list of careers, updated every week.</p>
+    <div class="filters">
+      <input class="filter-input" id="searchInput" placeholder="🔍  Search careers..." oninput="renderCareers()">
+      <select class="filter-input" id="industryFilter" onchange="renderCareers()">
+        <option value="">All Industries</option>
+        <option>Technology</option>
+        <option>Healthcare</option>
+        <option>Engineering</option>
+        <option>Business</option>
+        <option>Science</option>
+        <option>Creative</option>
+        <option>Sports</option>
+        <option>Education</option>
+      </select>
+      <select class="filter-input" id="diffFilter" onchange="renderCareers()">
+        <option value="">Any Difficulty</option>
+        <option value="1">⭐ Easy</option>
+        <option value="2">⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="5">⭐⭐⭐⭐⭐ Hard</option>
+      </select>
+      <select class="filter-input" id="salaryFilter" onchange="renderCareers()">
+        <option value="">Any Salary</option>
+        <option value="50000">$50k+</option>
+        <option value="80000">$80k+</option>
+        <option value="120000">$120k+</option>
+        <option value="150000">$150k+</option>
+      </select>
+    </div>
+    <div class="grid-3" id="careersGrid"></div>
+    <div id="noCareers" style="display:none;" class="empty-state" style="margin-top:2rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🔍</div>
+      <p>No careers match your search. Try different filters!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ PAGE ===== -->
+<div id="page-quiz" class="page">
+  <div class="section">
+    <h2 class="section-title">Career <span>Quiz</span></h2>
+    <p class="section-sub">Answer 10 questions to discover which career paths suit you best.</p>
+    <div class="quiz-wrap" id="quizContainer"></div>
+  </div>
+</div>
+
+<!-- ===== RESOURCES PAGE ===== -->
+<div id="page-resources" class="page">
+  <div class="section">
+    <h2 class="section-title">Free <span>Resources</span></h2>
+    <p class="section-sub">Everything you need to start planning your future — completely free.</p>
+    <div class="grid-2" id="resourcesGrid"></div>
+  </div>
+</div>
+
+<!-- ===== INTERVIEWS PAGE ===== -->
+<div id="page-interviews" class="page">
+  <div class="section">
+    <h2 class="section-title">Real <span>Interviews</span></h2>
+    <p class="section-sub">Watch professionals talk about their careers, updated weekly.</p>
+    <div class="grid-3" id="interviewsGrid"></div>
+  </div>
+</div>
+
+<!-- ===== ABOUT PAGE ===== -->
+<div id="page-about" class="page">
+  <div class="section">
+    <h2 class="section-title">About <span>STEMvolve</span></h2>
+    <div class="about-grid" style="margin-top:2rem;">
+      <div class="about-text">
+        <p>STEMvolve was founded by a 14-year-old high school freshman who realized that figuring out what career you want to pursue is one of the hardest things about being a student — and nobody was making it easier.</p>
+        <p>Most career websites are built by adults who don't remember what it's like to be in middle or high school, overwhelmed with choices and unsure where to start.</p>
+        <p>So we built STEMvolve — a platform where students can explore real careers, watch interviews with real professionals, and start planning their future while they still have time to act on it.</p>
+        <p style="color:var(--orange);font-weight:600;">Built by students. For students. Always free.</p>
+      </div>
+      <div>
+        <div class="card" style="cursor:default;">
+          <div style="font-size:2.5rem;margin-bottom:1rem;">🎯</div>
+          <h3>Our Mission</h3>
+          <p style="margin-top:0.5rem;color:var(--gray);line-height:1.7;">To help every middle and high school student discover their dream career path before they graduate — giving them the clarity, confidence, and roadmap to make it happen.</p>
+        </div>
+      </div>
+    </div>
+    <h2 class="section-title" style="margin-top:4rem;">Meet the <span>Team</span></h2>
+    <div class="team-grid" id="teamGrid"></div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD PAGE ===== -->
+<div id="page-dashboard" class="page">
+  <div class="section">
+    <h2 class="section-title">Your <span>Dashboard</span></h2>
+    <div id="dashContent"></div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PAGE ===== -->
+<div id="page-admin" class="page">
+  <div class="section">
+    <h2 class="section-title">Admin <span>Dashboard</span></h2>
+    <p class="section-sub">Manage careers, interviews, and team members.</p>
+
+    <!-- Add Career Form -->
+    <div class="card" style="cursor:default;margin-bottom:2rem;">
+      <h3 style="margin-bottom:1.5rem;">➕ Add New Career</h3>
+      <div class="admin-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <input id="a_name" placeholder="Career Name *">
+          <select id="a_industry">
+            <option value="">Select Industry *</option>
+            <option>Technology</option><option>Healthcare</option><option>Engineering</option>
+            <option>Business</option><option>Science</option><option>Creative</option>
+            <option>Sports</option><option>Education</option>
+          </select>
+          <input id="a_salary" placeholder="Annual Salary (e.g. 120000) *" type="number">
+          <select id="a_difficulty">
+            <option value="">Difficulty (1-5) *</option>
+            <option value="1">1 - Easy</option><option value="2">2</option>
+            <option value="3">3 - Medium</option><option value="4">4</option>
+            <option value="5">5 - Hard</option>
+          </select>
+          <input id="a_time" placeholder="Time to get there (e.g. 4-6 years)">
+          <input id="a_highschool" placeholder="What to study in high school">
+        </div>
+        <textarea id="a_description" placeholder="Short description *" rows="2" style="width:100%;background:var(--navy);border:1px solid rgba(255,255,255,0.12);color:white;padding:0.85rem 1rem;border-radius:10px;font-family:'DM Sans',sans-serif;resize:vertical;margin-bottom:0.75rem;"></textarea>
+        <textarea id="a_daily" placeholder="What do you do daily?" rows="2" style="width:100%;background:var(--navy);border:1px solid rgba(255,255,255,0.12);color:white;padding:0.85rem 1rem;border-radius:10px;font-family:'DM Sans',sans-serif;resize:vertical;margin-bottom:0.75rem;"></textarea>
+        <input id="a_video" placeholder="YouTube Embed URL (e.g. https://www.youtube.com/embed/VIDEOID)" style="width:100%;">
+        <button class="btn-orange" style="margin-top:0.5rem;" onclick="addCareer()">Add Career</button>
+      </div>
+    </div>
+
+    <!-- Add Interview Form -->
+    <div class="card" style="cursor:default;margin-bottom:2rem;">
+      <h3 style="margin-bottom:1.5rem;">🎥 Add New Interview</h3>
+      <div class="admin-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <input id="i_title" placeholder="Interview Title *">
+          <input id="i_person" placeholder="Person's Name & Role *">
+          <input id="i_industry" placeholder="Industry *">
+          <input id="i_video" placeholder="YouTube Embed URL *">
+        </div>
+        <button class="btn-orange" style="margin-top:0.25rem;" onclick="addInterview()">Add Interview</button>
+      </div>
+    </div>
+
+    <!-- Add Team Member -->
+    <div class="card" style="cursor:default;margin-bottom:2rem;">
+      <h3 style="margin-bottom:1.5rem;">👥 Add Team Member</h3>
+      <div class="admin-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <input id="t_name" placeholder="Name *">
+          <input id="t_role" placeholder="Role (e.g. Co-Founder) *">
+          <input id="t_emoji" placeholder="Emoji avatar (e.g. 👨‍💻)">
+        </div>
+        <button class="btn-orange" style="margin-top:0.25rem;" onclick="addTeamMember()">Add Member</button>
+      </div>
+    </div>
+
+    <!-- Manage Careers -->
+    <div class="card" style="cursor:default;">
+      <h3 style="margin-bottom:1rem;">📋 All Careers (<span id="careerCount">0</span>)</h3>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="adminTable">
+          <thead><tr><th>Name</th><th>Industry</th><th>Salary</th><th>Diff</th><th>Action</th></tr></thead>
+          <tbody id="adminTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- AUTH MODAL -->
-<div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-<div class="bg-[#162151] p-8 rounded-2xl max-w-md w-full">
-<h2 id="authTitle" class="text-2xl font-bold text-[#FF6B00]">Login</h2>
-<input id="nameInput" placeholder="Name" class="hidden w-full border p-3 mt-4 rounded"/>
-<input id="gradeInput" placeholder="Grade" class="hidden w-full border p-3 mt-4 rounded"/>
-<input id="emailInput" placeholder="Email" class="w-full border p-3 mt-4 rounded"/>
-<input id="passwordInput" type="password" placeholder="Password" class="w-full border p-3 mt-4 rounded"/>
-<button onclick="submitAuth()" class="w-full bg-[#FF6B00] text-white py-3 mt-4 rounded">Continue</button>
-<p onclick="toggleAuth()" class="text-center mt-3 cursor-pointer text-[#FF6B00]">Create Account</p>
-</div>
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div class="modal-title" id="authTitle">Welcome back 👋</div>
+    <div class="error-msg" id="authError"></div>
+    <div id="signupFields" style="display:none;">
+      <input class="modal-input" id="authName" placeholder="Full Name">
+      <select class="modal-input" id="authGrade">
+        <option value="">Select Grade</option>
+        <option>6th Grade</option><option>7th Grade</option><option>8th Grade</option>
+        <option>9th Grade</option><option>10th Grade</option><option>11th Grade</option><option>12th Grade</option>
+      </select>
+    </div>
+    <input class="modal-input" id="authEmail" placeholder="Email Address" type="email">
+    <input class="modal-input" id="authPassword" placeholder="Password" type="password">
+    <button class="btn-orange" style="width:100%;padding:0.85rem;" onclick="submitAuth()">Continue</button>
+    <div class="modal-switch" id="authSwitch">
+      Don't have an account? <span onclick="toggleAuthMode()">Sign up free</span>
+    </div>
+  </div>
 </div>
 
-<!-- CAREER MODAL -->
-<div id="careerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-6">
-<div class="bg-[#162151] max-w-3xl w-full p-8 rounded-2xl relative">
-<button onclick="closeCareer()" class="absolute right-4 top-4 text-xl text-white">✕</button>
-<div id="careerContent"></div>
+<!-- CAREER DETAIL MODAL -->
+<div class="modal-overlay" id="careerModal">
+  <div class="modal-box career-modal-box">
+    <button class="modal-close" onclick="closeCareerModal()">✕</button>
+    <div id="careerModalContent"></div>
+  </div>
 </div>
-</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <!-- FOOTER -->
-<footer class="bg-[#1B2B6B] text-white py-14 text-center">
-<h3 class="text-xl font-bold">STEM<span class="text-[#FF6B00]">volve</span></h3>
-<p class="mt-3 text-gray-300">Find your path. Own your future.</p>
-<p class="mt-6 text-gray-400">Built by students for students</p>
+<footer>
+  <div class="logo">STEM<span style="color:var(--orange)">volve</span></div>
+  <p>Find your path. Own your future.</p>
+  <div class="social-links">
+    <a class="social-link" href="#" title="Instagram">📸</a>
+    <a class="social-link" href="#" title="TikTok">🎵</a>
+    <a class="social-link" href="#" title="YouTube">▶️</a>
+    <a class="social-link" href="#" title="LinkedIn">💼</a>
+  </div>
+  <p style="margin-top:1.5rem;font-size:0.8rem;">© 2025 STEMvolve. Built by students, for students. Always free.</p>
 </footer>
 
 <script>
-/* MOBILE MENU */
-menuBtn.onclick = ()=>{mobileMenu.classList.toggle("hidden");}
+// ==================== DATA ====================
+const ADMIN_EMAIL = "admin@stemvolve.com";
+const ADMIN_PASS = "stemvolve2025";
 
-/* USERS */
-let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-let users = JSON.parse(localStorage.getItem("users")) || [];
-
-/* AUTH */
-let isSignup=false;
-function openAuth(){authModal.classList.remove("hidden");}
-function toggleAuth(){
-isSignup=!isSignup;
-authTitle.innerText=isSignup?"Create Account":"Login";
-nameInput.classList.toggle("hidden");
-gradeInput.classList.toggle("hidden");
+function getData(key, def) {
+  try { return JSON.parse(localStorage.getItem(key)) || def; } catch { return def; }
 }
-function submitAuth(){
-const email=emailInput.value,password=passwordInput.value;
-if(isSignup){
-if(!nameInput.value || !gradeInput.value || !email || !password){alert("Fill all fields!"); return;}
-const user={id:Date.now(),name:nameInput.value,grade:gradeInput.value,email,password,favorites:[],quizResults:[]};
-users.push(user);
-localStorage.setItem("users",JSON.stringify(users));
-localStorage.setItem("currentUser",JSON.stringify(user));
-currentUser=user;
-}else{
-const user=users.find(u=>u.email===email&&u.password===password);
-if(!user){alert("Invalid login"); return;}
-currentUser=user;
-localStorage.setItem("currentUser",JSON.stringify(user));
-}
-authModal.classList.add("hidden");
-updateDashboard();
+function setData(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
 }
 
-/* CAREERS DATABASE */
-let careers=JSON.parse(localStorage.getItem("careers"))||[
-{id:1,name:"Computer Hardware Engineer",industry:"Engineering",salary:120000,difficulty:4,description:"Design computer components",daily:"Design hardware systems",highschool:"Math Physics Coding",time:"4-6 years",video:"https://www.youtube.com/embed/2ePf9rue1Ao"},
-{id:2,name:"AI Engineer",industry:"Technology",salary:150000,difficulty:5,description:"Build AI systems",daily:"Train AI models",highschool:"Math Coding",time:"4-8 years",video:"https://www.youtube.com/embed/JMUxmLyrhSk"},
-{id:3,name:"Biomedical Engineer",industry:"Healthcare",salary:95000,difficulty:4,description:"Create medical devices",daily:"Design hospital equipment",highschool:"Biology Chemistry",time:"4-6 years",video:"https://www.youtube.com/embed/k9K2xj8L7oE"}
+let careers = getData('sv_careers', [
+  {id:1,name:"Software Engineer",industry:"Technology",salary:130000,difficulty:4,description:"Design and build software applications used by millions of people around the world.",daily:"Write code, debug problems, attend team meetings, review code from teammates.",highschool:"Math, Computer Science, Coding clubs",time:"4 years college + 1-2 years experience",video:"https://www.youtube.com/embed/2ePf9rue1Ao"},
+  {id:2,name:"AI/ML Engineer",industry:"Technology",salary:160000,difficulty:5,description:"Build and train artificial intelligence systems and machine learning models.",daily:"Train AI models, analyze data, experiment with algorithms, write Python code.",highschool:"Math, Statistics, Computer Science, Coding",time:"4-6 years",video:"https://www.youtube.com/embed/JMUxmLyrhSk"},
+  {id:3,name:"Biomedical Engineer",industry:"Healthcare",salary:97000,difficulty:4,description:"Design medical devices and equipment that save lives in hospitals every day.",daily:"Design prototypes, run tests, collaborate with doctors, write reports.",highschool:"Biology, Chemistry, Physics, Math",time:"4-6 years",video:"https://www.youtube.com/embed/k9K2xj8L7oE"},
+  {id:4,name:"Game Developer",industry:"Technology",salary:110000,difficulty:4,description:"Create the video games that entertain millions of players worldwide.",daily:"Code game mechanics, design levels, fix bugs, test gameplay.",highschool:"Math, Computer Science, Art (for design)",time:"4 years college or self-taught",video:""},
+  {id:5,name:"Doctor (Physician)",industry:"Healthcare",salary:220000,difficulty:5,description:"Diagnose and treat patients, helping people recover from illness and injury.",daily:"See patients, review test results, prescribe treatments, consult with specialists.",highschool:"Biology, Chemistry, Math, volunteering at hospitals",time:"11-14 years (college + med school + residency)",video:""},
+  {id:6,name:"Entrepreneur",industry:"Business",salary:0,difficulty:5,description:"Start and run your own business, bringing ideas to life and creating jobs.",daily:"Build products, pitch investors, manage teams, solve problems daily.",highschool:"Business clubs, coding, leadership roles, side projects",time:"Anytime — you can start now!",video:""},
+  {id:7,name:"Content Creator",industry:"Creative",salary:75000,difficulty:2,description:"Create videos, podcasts, or social media content that entertains and educates audiences.",daily:"Film/edit content, engage with audience, plan content calendar, collaborate with brands.",highschool:"Media, Communications, Art, English",time:"Can start right now!",video:""},
+  {id:8,name:"Architect",industry:"Engineering",salary:90000,difficulty:4,description:"Design buildings and spaces that are both beautiful and functional.",daily:"Create designs using CAD software, meet with clients, oversee construction projects.",highschool:"Math, Physics, Art, Computer-Aided Design",time:"5-7 years",video:""},
+  {id:9,name:"Data Scientist",industry:"Science",salary:125000,difficulty:4,description:"Analyze huge datasets to find patterns and insights that help companies make better decisions.",daily:"Analyze data, build statistical models, create visualizations, present findings.",highschool:"Math, Statistics, Computer Science",time:"4-6 years",video:""},
+  {id:10,name:"Professional Athlete",industry:"Sports",salary:50000,difficulty:5,description:"Compete at the highest level in your sport, representing teams or your country.",daily:"Train for hours, study game film, physical therapy, practice with team.",highschool:"Join school sports teams, train daily, stay healthy",time:"Depends on sport — start now!",video:""}
+]);
+
+let interviews = getData('sv_interviews', [
+  {id:1,title:"A Day in the Life of a Software Engineer",person:"Alex Chen — Senior Engineer at Google",industry:"Technology",video:"https://www.youtube.com/embed/2ePf9rue1Ao"},
+  {id:2,title:"How I Became an AI Researcher",person:"Dr. Sarah Kim — AI Researcher at OpenAI",industry:"Technology",video:"https://www.youtube.com/embed/JMUxmLyrhSk"}
+]);
+
+let team = getData('sv_team', [
+  {id:1,name:"Founder",role:"Founder & CEO",emoji:"🚀"},
+  {id:2,name:"Co-Founder",role:"Co-Founder",emoji:"💡"},
+]);
+
+let users = getData('sv_users', []);
+let currentUser = getData('sv_currentUser', null);
+
+// ==================== NAVIGATION ====================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+
+  if (page === 'careers') renderCareers();
+  if (page === 'quiz') initQuiz();
+  if (page === 'resources') renderResources();
+  if (page === 'interviews') renderInterviews();
+  if (page === 'about') renderTeam();
+  if (page === 'dashboard') renderDashboard();
+  if (page === 'admin') renderAdmin();
+
+  // Update stat
+  const students = users.length;
+  const statEl = document.getElementById('statStudents');
+  if (statEl) statEl.textContent = students;
+  const statCareers = document.getElementById('statCareers');
+  if (statCareers) statCareers.textContent = careers.length + '+';
+}
+
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// ==================== AUTH ====================
+let isSignup = false;
+
+function updateNavAuth() {
+  const navAuth = document.getElementById('navAuth');
+  const mobileNavAuth = document.getElementById('mobileNavAuth');
+  if (currentUser) {
+    const isAdmin = currentUser.email === ADMIN_EMAIL;
+    const html = `
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        ${isAdmin ? `<button class="btn-outline" onclick="showPage('admin')">⚙️ Admin</button>` : `<button class="btn-outline" onclick="showPage('dashboard')">My Dashboard</button>`}
+        <div class="user-chip" onclick="logout()">👋 ${currentUser.name.split(' ')[0]} · Logout</div>
+      </div>`;
+    navAuth.innerHTML = html;
+    mobileNavAuth.innerHTML = html;
+  } else {
+    const html = `<button class="btn-orange" onclick="openAuth()">Login / Sign Up</button>`;
+    navAuth.innerHTML = html;
+    mobileNavAuth.innerHTML = html;
+  }
+}
+
+function openAuth() {
+  isSignup = false;
+  document.getElementById('authTitle').textContent = 'Welcome back 👋';
+  document.getElementById('authSwitch').innerHTML = `Don't have an account? <span onclick="toggleAuthMode()">Sign up free</span>`;
+  document.getElementById('signupFields').style.display = 'none';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+  document.getElementById('authName').value = '';
+  document.getElementById('authGrade').value = '';
+  hideAuthError();
+  document.getElementById('authModal').classList.add('open');
+}
+
+function closeAuth() {
+  document.getElementById('authModal').classList.remove('open');
+}
+
+function toggleAuthMode() {
+  isSignup = !isSignup;
+  document.getElementById('authTitle').textContent = isSignup ? 'Create your account 🎉' : 'Welcome back 👋';
+  document.getElementById('signupFields').style.display = isSignup ? 'block' : 'none';
+  document.getElementById('authSwitch').innerHTML = isSignup
+    ? `Already have an account? <span onclick="toggleAuthMode()">Log in</span>`
+    : `Don't have an account? <span onclick="toggleAuthMode()">Sign up free</span>`;
+  hideAuthError();
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideAuthError() {
+  document.getElementById('authError').style.display = 'none';
+}
+
+function submitAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value.trim();
+  hideAuthError();
+
+  if (!email || !password) { showAuthError('Please fill in all fields.'); return; }
+
+  // Check admin
+  if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
+    currentUser = { id: 'admin', name: 'Admin', email: ADMIN_EMAIL, isAdmin: true, favorites: [], quizResults: [] };
+    setData('sv_currentUser', currentUser);
+    closeAuth();
+    updateNavAuth();
+    showPage('admin');
+    showToast('Welcome back, Admin! 👋');
+    return;
+  }
+
+  if (isSignup) {
+    const name = document.getElementById('authName').value.trim();
+    const grade = document.getElementById('authGrade').value;
+    if (!name || !grade) { showAuthError('Please fill in all fields.'); return; }
+    if (users.find(u => u.email === email)) { showAuthError('An account with this email already exists.'); return; }
+    if (password.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
+    const newUser = { id: Date.now(), name, grade, email, password, favorites: [], quizResults: [] };
+    users.push(newUser);
+    setData('sv_users', users);
+    currentUser = newUser;
+    setData('sv_currentUser', currentUser);
+    closeAuth();
+    updateNavAuth();
+    showToast(`Welcome to STEMvolve, ${name}! 🎉`);
+    showPage('dashboard');
+  } else {
+    const user = users.find(u => u.email === email && u.password === password);
+    if (!user) { showAuthError('Invalid email or password.'); return; }
+    currentUser = user;
+    setData('sv_currentUser', currentUser);
+    closeAuth();
+    updateNavAuth();
+    showToast(`Welcome back, ${user.name}! 👋`);
+    showPage('dashboard');
+  }
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('sv_currentUser');
+  updateNavAuth();
+  showPage('home');
+  showToast('Logged out successfully.');
+}
+
+// ==================== CAREERS ====================
+function renderCareers() {
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const industry = document.getElementById('industryFilter')?.value || '';
+  const diff = document.getElementById('diffFilter')?.value || '';
+  const salary = document.getElementById('salaryFilter')?.value || '';
+
+  const filtered = careers.filter(c =>
+    (!search || c.name.toLowerCase().includes(search) || c.description.toLowerCase().includes(search)) &&
+    (!industry || c.industry === industry) &&
+    (!diff || c.difficulty == diff) &&
+    (!salary || c.salary >= parseInt(salary))
+  );
+
+  const grid = document.getElementById('careersGrid');
+  const noCareers = document.getElementById('noCareers');
+  if (!grid) return;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    if (noCareers) noCareers.style.display = 'block';
+    return;
+  }
+  if (noCareers) noCareers.style.display = 'none';
+
+  grid.innerHTML = filtered.map(c => `
+    <div class="card" onclick="openCareerModal(${c.id})">
+      <div class="card-tag">${c.industry}</div>
+      <h3>${c.name}</h3>
+      <p>${c.description}</p>
+      <div class="card-footer">
+        <span class="salary">${c.salary > 0 ? '$' + c.salary.toLocaleString() + '/yr' : 'Varies'}</span>
+        <span class="diff">${'⭐'.repeat(c.difficulty)} ${c.difficulty}/5</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openCareerModal(id) {
+  const c = careers.find(x => x.id === id);
+  if (!c) return;
+  const isSaved = currentUser && currentUser.favorites && currentUser.favorites.includes(id);
+  document.getElementById('careerModalContent').innerHTML = `
+    <div class="card-tag">${c.industry}</div>
+    <h2 style="font-size:1.75rem;font-weight:800;margin:0.5rem 0 1rem;">${c.name}</h2>
+    <p style="color:var(--gray);line-height:1.7;">${c.description}</p>
+    <div class="career-detail-grid">
+      <div class="detail-item"><h4>💰 Salary</h4><p>${c.salary > 0 ? '$' + c.salary.toLocaleString() + '/year' : 'Varies by success'}</p></div>
+      <div class="detail-item"><h4>⭐ Difficulty</h4><p>${'⭐'.repeat(c.difficulty)} ${c.difficulty}/5</p></div>
+      <div class="detail-item"><h4>⏱️ Time to Get There</h4><p>${c.time || 'Varies'}</p></div>
+      <div class="detail-item"><h4>📚 Study in High School</h4><p>${c.highschool || 'See resources'}</p></div>
+    </div>
+    ${c.daily ? `<div class="detail-item" style="margin-bottom:1rem;"><h4>📅 Daily Work</h4><p>${c.daily}</p></div>` : ''}
+    ${c.video ? `<iframe src="${c.video}" style="width:100%;aspect-ratio:16/9;border-radius:12px;margin-bottom:1rem;border:none;" allowfullscreen></iframe>` : ''}
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <button class="btn-orange" onclick="saveFavorite(${c.id})">${isSaved ? '❤️ Saved!' : '🤍 Save Career'}</button>
+      <button class="btn-outline" onclick="closeCareerModal()">Close</button>
+    </div>
+  `;
+  document.getElementById('careerModal').classList.add('open');
+}
+
+function closeCareerModal() {
+  document.getElementById('careerModal').classList.remove('open');
+}
+
+function saveFavorite(id) {
+  if (!currentUser) { closeCareerModal(); openAuth(); return; }
+  if (!currentUser.favorites) currentUser.favorites = [];
+  if (!currentUser.favorites.includes(id)) {
+    currentUser.favorites.push(id);
+    users = users.map(u => u.id === currentUser.id ? currentUser : u);
+    setData('sv_users', users);
+    setData('sv_currentUser', currentUser);
+    showToast('Career saved to your dashboard! ❤️');
+    openCareerModal(id); // refresh button state
+  } else {
+    showToast('Already saved!');
+  }
+}
+
+// ==================== QUIZ ====================
+const quizQuestions = [
+  { q: "What sounds most exciting to you?", opts: ["Building apps or games 💻", "Helping sick people get better 🏥", "Starting my own business 💼", "Creating art or videos 🎨"] },
+  { q: "Which school subject do you enjoy most?", opts: ["Math & Computer Science", "Biology & Chemistry", "Economics & Business", "Art & English"] },
+  { q: "How do you like to work?", opts: ["Alone, focused on a problem", "With patients or clients", "Leading a team", "Collaborating creatively"] },
+  { q: "What matters most in your future job?", opts: ["High salary & stability", "Making a difference in people's lives", "Being your own boss", "Creative freedom"] },
+  { q: "What are you naturally good at?", opts: ["Logical thinking & problem solving", "Empathy & communication", "Persuasion & leadership", "Design & storytelling"] },
+  { q: "What do you do in your free time?", opts: ["Code, game, or explore tech", "Volunteer or help others", "Work on side projects or hustle", "Draw, film, write, or create"] },
+  { q: "Where do you see yourself working?", opts: ["A tech company or startup", "A hospital or lab", "Running my own company", "A studio, agency, or media company"] },
+  { q: "Which challenge sounds most motivating?", opts: ["Solving a complex technical bug", "Finding a cure for a disease", "Growing a business from zero", "Creating something that moves people"] },
+  { q: "How much education are you willing to do?", opts: ["4 years college, that's it", "10+ years if it means changing lives", "I'll learn on my own / self-taught", "Art school or creative programs"] },
+  { q: "Your dream is to...", opts: ["Build the next big app", "Save lives as a doctor or researcher", "Be a successful CEO or founder", "Become a famous creator or designer"] }
 ];
 
-/* DISPLAY CAREERS */
-function displayCareers(){
-const search=searchInput.value.toLowerCase();
-const industry=industryFilter.value;
-const difficulty=difficultyFilter.value;
-const salary=salaryFilter.value;
-careersGrid.innerHTML="";
-careers.filter(c=>c.name.toLowerCase().includes(search)&&(!industry||c.industry===industry)&&(!difficulty||c.difficulty==difficulty)&&(!salary||c.salary>=salary))
-.forEach(c=>{
-careersGrid.innerHTML+=`<div onclick="openCareer(${c.id})" class="p-6 shadow rounded-xl card cursor-pointer">
-<h3 class="text-xl font-bold text-[#FF6B00]">${c.name}</h3>
-<p class="text-gray-300">${c.industry}</p>
-<p class="mt-2">${c.description}</p>
-<div class="flex justify-between mt-4"><span class="text-[#FF6B00]">$${c.salary}</span><span>${c.difficulty}/5</span></div>
-</div>`;
-});
-}
-displayCareers();
-document.addEventListener("input",displayCareers);
-document.addEventListener("change",displayCareers);
+const quizResults = {
+  tech: { title: "Tech & Engineering 💻", desc: "You're drawn to technology, problem-solving, and building things. Careers in software, AI, data science, and engineering are perfect for you.", careers: ["Software Engineer", "AI/ML Engineer", "Game Developer", "Data Scientist"], icon: "💻" },
+  health: { title: "Healthcare & Science 🏥", desc: "You care deeply about people and want to make a real difference in their health and wellbeing. Medicine, research, and biomedical fields are calling.", careers: ["Doctor (Physician)", "Biomedical Engineer", "Nurse", "Research Scientist"], icon: "🏥" },
+  business: { title: "Business & Entrepreneurship 💼", desc: "You're a natural leader with big ideas and the drive to make them happen. Business, entrepreneurship, and leadership roles are your calling.", careers: ["Entrepreneur", "Business Analyst", "Marketing Manager", "Finance"], icon: "💼" },
+  creative: { title: "Creative & Media 🎨", desc: "You see the world differently and want to express it. Content creation, design, film, and storytelling are where you'll thrive.", careers: ["Content Creator", "Graphic Designer", "Film Director", "Architect"], icon: "🎨" }
+};
 
-/* CAREER MODAL */
-function openCareer(id){
-const c=careers.find(x=>x.id===id);
-careerContent.innerHTML=`<h2 class="text-3xl font-bold text-[#FF6B00]">${c.name}</h2>
-<p class="mt-2">${c.description}</p>
-<div class="mt-6 grid md:grid-cols-2 gap-6">
-<div><h4 class="font-semibold">Daily Work</h4><p>${c.daily}</p></div>
-<div><h4 class="font-semibold">Salary</h4><p>$${c.salary}</p></div>
-<div><h4 class="font-semibold">Difficulty</h4><p>${c.difficulty}/5</p></div>
-<div><h4 class="font-semibold">High School</h4><p>${c.highschool}</p></div>
-</div>
-<iframe class="w-full h-64 mt-6 rounded-xl" src="${c.video}" allowfullscreen></iframe>
-<button onclick="saveFavorite(${c.id})" class="mt-6 bg-[#FF6B00] text-white px-6 py-3 rounded">Save</button>`;
-careerModal.classList.remove("hidden");
-}
-function closeCareer(){careerModal.classList.add("hidden");}
+let quizCurrentQ = 0;
+let quizUserAnswers = [];
 
-/* FAVORITES */
-function saveFavorite(id){
-if(!currentUser){openAuth();return;}
-if(!currentUser.favorites.includes(id)) currentUser.favorites.push(id);
-users = users.map(u => u.id === currentUser.id ? currentUser : u);
-localStorage.setItem("users",JSON.stringify(users));
-localStorage.setItem("currentUser",JSON.stringify(currentUser));
-updateDashboard();
+function initQuiz() {
+  quizCurrentQ = 0;
+  quizUserAnswers = new Array(quizQuestions.length).fill(null);
+  renderQuizQuestion();
 }
 
-/* DASHBOARD */
-function updateDashboard(){
-if(!currentUser)return;
-dashboard.classList.remove("hidden");
-savedCareers.innerHTML="";
-currentUser.favorites.forEach(id=>{
-const c=careers.find(x=>x.id===id);
-savedCareers.innerHTML+=`<div class="p-6 shadow rounded card"><h3 class="font-bold text-[#FF6B00]">${c.name}</h3><p>${c.industry}</p></div>`;
-});
+function renderQuizQuestion() {
+  const container = document.getElementById('quizContainer');
+  if (!container) return;
+
+  if (quizCurrentQ >= quizQuestions.length) {
+    showQuizResult();
+    return;
+  }
+
+  const q = quizQuestions[quizCurrentQ];
+  const progress = ((quizCurrentQ + 1) / quizQuestions.length) * 100;
+
+  container.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <p style="color:var(--gray);font-size:0.85rem;margin-bottom:1rem;">Question ${quizCurrentQ + 1} of ${quizQuestions.length}</p>
+    <div class="quiz-q">${q.q}</div>
+    ${q.opts.map((opt, i) => `
+      <button class="quiz-opt ${quizUserAnswers[quizCurrentQ] === i ? 'selected' : ''}" onclick="selectQuizAnswer(${i})">${opt}</button>
+    `).join('')}
+    <div class="quiz-nav">
+      <button class="btn-outline" onclick="quizPrev()" ${quizCurrentQ === 0 ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>← Back</button>
+      <button class="btn-orange" onclick="quizNext()">${quizCurrentQ === quizQuestions.length - 1 ? 'See Results 🎯' : 'Next →'}</button>
+    </div>
+  `;
 }
 
-/* QUIZ */
-let quizQuestions=[
-"Do you enjoy solving complex problems?",
-"Do you enjoy helping people?",
-"Do you like working with technology?",
-"Do you enjoy leadership roles?",
-"Do you enjoy math?",
-"Do you enjoy science?",
-"Do you like creativity?",
-"Do you like teamwork?",
-"Do you enjoy building things?",
-"Do you enjoy research?",
-"Do you enjoy business?",
-"Do you enjoy coding?",
-"Do you enjoy teaching?",
-"Do you enjoy designing?",
-"Do you enjoy innovation?",
-"Do you enjoy working outdoors?",
-"Do you enjoy healthcare?",
-"Do you enjoy engineering?",
-"Do you enjoy entrepreneurship?",
-"Do you enjoy discovery?"
+function selectQuizAnswer(i) {
+  quizUserAnswers[quizCurrentQ] = i;
+  renderQuizQuestion();
+}
+
+function quizNext() {
+  if (quizUserAnswers[quizCurrentQ] === null) { showToast('Please select an answer!'); return; }
+  quizCurrentQ++;
+  renderQuizQuestion();
+}
+
+function quizPrev() {
+  if (quizCurrentQ > 0) { quizCurrentQ--; renderQuizQuestion(); }
+}
+
+function showQuizResult() {
+  const counts = { tech: 0, health: 0, business: 0, creative: 0 };
+  const map = ['tech', 'health', 'business', 'creative'];
+  quizUserAnswers.forEach(a => { if (a !== null) counts[map[a % 4]]++; });
+  const top = Object.keys(counts).reduce((a, b) => counts[a] >= counts[b] ? a : b);
+  const result = quizResults[top];
+
+  if (currentUser) {
+    if (!currentUser.quizResults) currentUser.quizResults = [];
+    currentUser.quizResults.unshift({ date: new Date().toLocaleDateString(), result: result.title });
+    users = users.map(u => u.id === currentUser.id ? currentUser : u);
+    setData('sv_users', users);
+    setData('sv_currentUser', currentUser);
+  }
+
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="result-card">
+      <div class="result-icon">${result.icon}</div>
+      <div class="result-title">${result.title}</div>
+      <p class="result-desc">${result.desc}</p>
+      <div class="result-careers">
+        ${result.careers.map(c => `<span class="result-tag">${c}</span>`).join('')}
+      </div>
+      <div style="margin-top:2rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-orange btn-big" onclick="showPage('careers')">Explore These Careers</button>
+        <button class="btn-outline btn-big" onclick="initQuiz()">Retake Quiz</button>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== RESOURCES ====================
+const resources = [
+  { icon: "🧭", title: "How to Figure Out What Career Suits You", desc: "A step-by-step guide to discovering your strengths, interests, and ideal career path.", link: "#" },
+  { icon: "📖", title: "What to Do in Middle School to Prepare", desc: "The exact clubs, classes, and habits that will set you up for success in high school and beyond.", link: "#" },
+  { icon: "🏆", title: "Clubs & Activities That Help Your Future Career", desc: "Find out which extracurriculars actually matter and how to stand out on applications.", link: "#" },
+  { icon: "🤝", title: "How to Talk to a Professional in Your Field", desc: "Scripts and tips for reaching out to professionals for advice, shadowing, and mentorship.", link: "#" },
+  { icon: "⚖️", title: "How to Balance School and Your Passions", desc: "Practical strategies for managing homework, hobbies, and still having time for yourself.", link: "#" },
+  { icon: "🎓", title: "High School to College: What Nobody Tells You", desc: "The honest guide to navigating the college application process with your career goals in mind.", link: "#" }
 ];
-let quizIndex=0,quizAnswers=[];
-function loadQuestion(){
-quizQuestion.innerText=(quizIndex+1)+". "+quizQuestions[quizIndex];
-quizAnswersDiv="";
-quizAnswersDiv = `<div onclick="selectAnswer(1)" class="p-4 border rounded cursor-pointer text-black bg-white">Yes</div>
-<div onclick="selectAnswer(0)" class="p-4 border rounded cursor-pointer text-black bg-white">No</div>`;
-quizAnswersDiv.innerHTML = quizAnswersDiv;
-quizAnswers.innerHTML = quizAnswersDiv;
-quizProgress.style.width=((quizIndex+1)/20*100)+"%";
-}
-function selectAnswer(a){quizAnswers[quizIndex]=a;}
-function nextQuestion(){if(quizIndex<19){quizIndex++;loadQuestion();}else{showResults();}}
-function prevQuestion(){if(quizIndex>0){quizIndex--;loadQuestion();}}
-function showResults(){
-const score=quizAnswers.reduce((a,b)=>a+b,0);
-let result="";
-if(score>15) result="Technology & Engineering";
-else if(score>10) result="Science & Healthcare";
-else result="Business & Creative";
-quiz.innerHTML=`<h2 class="text-3xl font-bold text-center text-[#FF6B00]">Your Result</h2>
-<div class="mt-10 text-center text-xl text-white">${result}</div>`;
+
+function renderResources() {
+  const grid = document.getElementById('resourcesGrid');
+  if (!grid) return;
+  grid.innerHTML = resources.map(r => `
+    <div class="resource-card">
+      <div class="resource-icon">${r.icon}</div>
+      <div>
+        <h3>${r.title}</h3>
+        <p>${r.desc}</p>
+        <button class="btn-orange" style="margin-top:1rem;padding:0.5rem 1rem;font-size:0.85rem;" onclick="showToast('Coming soon! 📥')">Download Free</button>
+      </div>
+    </div>
+  `).join('');
 }
 
-/* SCROLL */
-function scrollToCareers(){document.getElementById("careers").scrollIntoView();}
-loadQuestion();
+// ==================== INTERVIEWS ====================
+function renderInterviews() {
+  const grid = document.getElementById('interviewsGrid');
+  if (!grid) return;
+  if (interviews.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div style="font-size:2rem;margin-bottom:0.75rem;">🎥</div><p>Interviews coming soon! Check back next week.</p></div>`;
+    return;
+  }
+  grid.innerHTML = interviews.map(i => `
+    <div class="interview-card">
+      ${i.video ? `<iframe class="interview-video" src="${i.video}" allowfullscreen style="border:none;"></iframe>` : `<div class="interview-video" style="display:flex;align-items:center;justify-content:center;color:var(--gray);">🎥 Video Coming Soon</div>`}
+      <div class="interview-info">
+        <h3>${i.title}</h3>
+        <p>${i.person}</p>
+        <div class="card-tag" style="margin-top:0.75rem;">${i.industry}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ==================== TEAM ====================
+function renderTeam() {
+  const grid = document.getElementById('teamGrid');
+  if (!grid) return;
+  grid.innerHTML = team.map(m => `
+    <div class="team-card">
+      <div class="team-avatar">${m.emoji || '👤'}</div>
+      <h4>${m.name}</h4>
+      <p>${m.role}</p>
+    </div>
+  `).join('');
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+  const container = document.getElementById('dashContent');
+  if (!container) return;
+  if (!currentUser) {
+    container.innerHTML = `<div class="empty-state"><div style="font-size:2rem;margin-bottom:0.75rem;">🔐</div><p>Please <span style="color:var(--orange);cursor:pointer;" onclick="openAuth()">log in</span> to view your dashboard.</p></div>`;
+    return;
+  }
+
+  const savedCareers = (currentUser.favorites || []).map(id => careers.find(c => c.id === id)).filter(Boolean);
+  const quizHistory = currentUser.quizResults || [];
+
+  container.innerHTML = `
+    <div class="dash-section">
+      <h3>👋 Welcome back, ${currentUser.name}!</h3>
+      <p style="color:var(--gray);">Grade: ${currentUser.grade || 'Not set'} · Member since ${new Date().toLocaleDateString()}</p>
+    </div>
+    <div class="dash-section">
+      <h3>❤️ Saved Careers (${savedCareers.length})</h3>
+      ${savedCareers.length === 0
+        ? `<div class="empty-state"><p>No saved careers yet. <span style="color:var(--orange);cursor:pointer;" onclick="showPage('careers')">Explore careers →</span></p></div>`
+        : `<div class="grid-3">${savedCareers.map(c => `
+            <div class="card" onclick="openCareerModal(${c.id})">
+              <div class="card-tag">${c.industry}</div>
+              <h3>${c.name}</h3>
+              <p>${c.description}</p>
+              <div class="card-footer">
+                <span class="salary">${c.salary > 0 ? '$' + c.salary.toLocaleString() + '/yr' : 'Varies'}</span>
+                <span class="diff">${c.difficulty}/5 ⭐</span>
+              </div>
+            </div>`).join('')}</div>`
+      }
+    </div>
+    <div class="dash-section">
+      <h3>🧠 Quiz History (${quizHistory.length})</h3>
+      ${quizHistory.length === 0
+        ? `<div class="empty-state"><p>No quiz results yet. <span style="color:var(--orange);cursor:pointer;" onclick="showPage('quiz')">Take the quiz →</span></p></div>`
+        : `<div style="display:flex;flex-direction:column;gap:0.75rem;">${quizHistory.map(r => `
+            <div class="card" style="cursor:default;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-weight:600;">${r.result}</span>
+              <span style="color:var(--gray);font-size:0.85rem;">${r.date}</span>
+            </div>`).join('')}</div>`
+      }
+    </div>
+    <button class="btn-outline" onclick="showPage('quiz')" style="margin-top:1rem;">Retake Quiz 🔄</button>
+  `;
+}
+
+// ==================== ADMIN ====================
+function renderAdmin() {
+  if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+    showPage('home'); return;
+  }
+  renderAdminTable();
+  document.getElementById('careerCount').textContent = careers.length;
+}
+
+function renderAdminTable() {
+  const tbody = document.getElementById('adminTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = careers.map(c => `
+    <tr>
+      <td style="color:white;font-weight:600;">${c.name}</td>
+      <td>${c.industry}</td>
+      <td>${c.salary > 0 ? '$' + c.salary.toLocaleString() : 'Varies'}</td>
+      <td>${c.difficulty}/5</td>
+      <td><button class="badge-del" onclick="deleteCareer(${c.id})">Delete</button></td>
+    </tr>
+  `).join('');
+  document.getElementById('careerCount').textContent = careers.length;
+}
+
+function addCareer() {
+  const name = document.getElementById('a_name').value.trim();
+  const industry = document.getElementById('a_industry').value;
+  const salary = parseInt(document.getElementById('a_salary').value) || 0;
+  const difficulty = parseInt(document.getElementById('a_difficulty').value);
+  const description = document.getElementById('a_description').value.trim();
+  const daily = document.getElementById('a_daily').value.trim();
+  const highschool = document.getElementById('a_highschool').value.trim();
+  const time = document.getElementById('a_time').value.trim();
+  const video = document.getElementById('a_video').value.trim();
+
+  if (!name || !industry || !difficulty || !description) { showToast('Please fill required fields! ⚠️'); return; }
+
+  const newCareer = { id: Date.now(), name, industry, salary, difficulty, description, daily, highschool, time, video };
+  careers.push(newCareer);
+  setData('sv_careers', careers);
+
+  ['a_name','a_industry','a_salary','a_difficulty','a_description','a_daily','a_highschool','a_time','a_video'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
+  renderAdminTable();
+  showToast(`"${name}" added successfully! ✅`);
+}
+
+function deleteCareer(id) {
+  if (!confirm('Delete this career?')) return;
+  careers = careers.filter(c => c.id !== id);
+  setData('sv_careers', careers);
+  renderAdminTable();
+  showToast('Career deleted.');
+}
+
+function addInterview() {
+  const title = document.getElementById('i_title').value.trim();
+  const person = document.getElementById('i_person').value.trim();
+  const industry = document.getElementById('i_industry').value.trim();
+  const video = document.getElementById('i_video').value.trim();
+  if (!title || !person || !video) { showToast('Please fill required fields! ⚠️'); return; }
+  interviews.push({ id: Date.now(), title, person, industry, video });
+  setData('sv_interviews', interviews);
+  ['i_title','i_person','i_industry','i_video'].forEach(id => document.getElementById(id).value = '');
+  showToast(`Interview added! 🎥`);
+}
+
+function addTeamMember() {
+  const name = document.getElementById('t_name').value.trim();
+  const role = document.getElementById('t_role').value.trim();
+  const emoji = document.getElementById('t_emoji').value.trim() || '👤';
+  if (!name || !role) { showToast('Please fill required fields! ⚠️'); return; }
+  team.push({ id: Date.now(), name, role, emoji });
+  setData('sv_team', team);
+  ['t_name','t_role','t_emoji'].forEach(id => document.getElementById(id).value = '');
+  showToast(`${name} added to the team! 👥`);
+}
+
+// ==================== NEWSLETTER ====================
+function subscribeNewsletter() {
+  const email = document.getElementById('newsletterEmail').value.trim();
+  if (!email || !email.includes('@')) { showToast('Please enter a valid email!'); return; }
+  showToast('You\'re subscribed! 📬 Thanks for joining STEMvolve.');
+  document.getElementById('newsletterEmail').value = '';
+}
+
+// ==================== TOAST ====================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ==================== INIT ====================
+updateNavAuth();
+renderCareers();
+
+// Close modals on overlay click
+document.getElementById('authModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAuth();
+});
+document.getElementById('careerModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCareerModal();
+});
 </script>
-
 </body>
 </html>
