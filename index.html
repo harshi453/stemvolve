@@ -333,6 +333,334 @@
     <div class="quiz-wrap" id="quizContainer"></div>
   </div>
 </div>
+  <script>
+
+/* STEMvolve Career Quiz */
+
+const quizQuestions = [
+
+{
+question: "I enjoy solving complex problems",
+category: "engineering"
+},
+
+{
+question: "I like helping people directly",
+category: "healthcare"
+},
+
+{
+question: "I enjoy building or designing things",
+category: "engineering"
+},
+
+{
+question: "I enjoy working with computers",
+category: "technology"
+},
+
+{
+question: "I enjoy leadership and management",
+category: "business"
+},
+
+{
+question: "I like conducting experiments",
+category: "science"
+},
+
+{
+question: "I enjoy creative work",
+category: "creative"
+},
+
+{
+question: "I enjoy working with numbers",
+category: "finance"
+},
+
+{
+question: "I like understanding how machines work",
+category: "engineering"
+},
+
+{
+question: "I enjoy working with data",
+category: "technology"
+},
+
+{
+question: "I like helping communities",
+category: "social"
+},
+
+{
+question: "I enjoy innovation and new ideas",
+category: "technology"
+},
+
+{
+question: "I enjoy biology or medicine",
+category: "healthcare"
+},
+
+{
+question: "I enjoy physics",
+category: "engineering"
+},
+
+{
+question: "I enjoy entrepreneurship",
+category: "business"
+},
+
+{
+question: "I enjoy research",
+category: "science"
+},
+
+{
+question: "I enjoy teamwork",
+category: "business"
+},
+
+{
+question: "I enjoy coding",
+category: "technology"
+},
+
+{
+question: "I enjoy designing products",
+category: "engineering"
+},
+
+{
+question: "I enjoy discovering new things",
+category: "science"
+}
+
+]
+
+let currentQuestion = 0
+let quizScores = {
+technology:0,
+engineering:0,
+healthcare:0,
+science:0,
+business:0,
+creative:0,
+finance:0,
+social:0
+}
+
+function loadQuiz(){
+
+const question = quizQuestions[currentQuestion]
+
+document.getElementById("quizQuestion")
+.innerText = (currentQuestion+1) + ". " + question.question
+
+document.getElementById("quizProgress")
+.style.width = ((currentQuestion+1)/quizQuestions.length*100) + "%"
+
+document.getElementById("quizAnswers").innerHTML = `
+
+<div onclick="selectAnswer(2)" 
+class="bg-white text-black p-4 rounded-lg cursor-pointer hover:bg-gray-200">
+Strongly Agree
+</div>
+
+<div onclick="selectAnswer(1)" 
+class="bg-white text-black p-4 rounded-lg cursor-pointer hover:bg-gray-200">
+Agree
+</div>
+
+<div onclick="selectAnswer(0)" 
+class="bg-white text-black p-4 rounded-lg cursor-pointer hover:bg-gray-200">
+Neutral
+</div>
+
+<div onclick="selectAnswer(-1)" 
+class="bg-white text-black p-4 rounded-lg cursor-pointer hover:bg-gray-200">
+Disagree
+</div>
+
+`
+
+}
+
+function selectAnswer(value){
+
+const category = quizQuestions[currentQuestion].category
+
+quizScores[category] += value
+
+}
+
+function nextQuestion(){
+
+if(currentQuestion < quizQuestions.length - 1){
+currentQuestion++
+loadQuiz()
+}
+else{
+showQuizResults()
+}
+
+}
+
+function previousQuestion(){
+
+if(currentQuestion > 0){
+currentQuestion--
+loadQuiz()
+}
+
+}
+
+function showQuizResults(){
+
+let topCareer = Object.keys(quizScores)
+.reduce((a,b)=> quizScores[a] > quizScores[b] ? a : b)
+
+let careerSuggestions = {
+
+technology:[
+"AI Engineer",
+"Software Engineer",
+"Cybersecurity Analyst"
+],
+
+engineering:[
+"Mechanical Engineer",
+"Computer Hardware Engineer",
+"Aerospace Engineer"
+],
+
+healthcare:[
+"Doctor",
+"Biomedical Engineer",
+"Medical Researcher"
+],
+
+science:[
+"Scientist",
+"Environmental Scientist",
+"Research Analyst"
+],
+
+business:[
+"Entrepreneur",
+"Business Analyst",
+"Project Manager"
+],
+
+creative:[
+"UX Designer",
+"Product Designer",
+"Game Designer"
+],
+
+finance:[
+"Financial Analyst",
+"Investment Banker",
+"Economist"
+],
+
+social:[
+"Teacher",
+"Psychologist",
+"Social Worker"
+]
+
+}
+
+const suggestions = careerSuggestions[topCareer]
+
+document.getElementById("quiz").innerHTML = `
+
+<div class="text-center">
+
+<h2 class="text-4xl font-bold text-[#FF6B00]">
+Your Career Match
+</h2>
+
+<p class="mt-6 text-xl">
+Based on your answers, you may enjoy:
+</p>
+
+<div class="mt-10 space-y-4">
+
+<div class="bg-[#162151] p-6 rounded-lg">
+${suggestions[0]}
+</div>
+
+<div class="bg-[#162151] p-6 rounded-lg">
+${suggestions[1]}
+</div>
+
+<div class="bg-[#162151] p-6 rounded-lg">
+${suggestions[2]}
+</div>
+
+</div>
+
+<button onclick="restartQuiz()"
+class="mt-10 bg-[#FF6B00] px-8 py-3 rounded-lg">
+Retake Quiz
+</button>
+
+</div>
+
+`
+
+saveQuizResult(topCareer)
+
+}
+
+function restartQuiz(){
+
+currentQuestion = 0
+
+quizScores = {
+technology:0,
+engineering:0,
+healthcare:0,
+science:0,
+business:0,
+creative:0,
+finance:0,
+social:0
+}
+
+location.reload()
+
+}
+
+function saveQuizResult(result){
+
+let currentUser = JSON.parse(localStorage.getItem("currentUser"))
+
+if(!currentUser) return
+
+if(!currentUser.quizResults)
+currentUser.quizResults = []
+
+currentUser.quizResults.push({
+result,
+date:new Date()
+})
+
+localStorage.setItem("currentUser",
+JSON.stringify(currentUser))
+
+}
+
+/* Load quiz */
+
+loadQuiz()
+
+</script>
 
 <!-- ===== RESOURCES PAGE ===== -->
 <div id="page-resources" class="page">
