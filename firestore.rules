@@ -1,0 +1,145 @@
+import React, { useState, useMemo } from 'react';
+import { Room } from '../../types';
+import { Layers } from 'lucide-react';
+import { motion } from 'motion/react';
+
+interface FloorPlanViewerProps {
+  rooms: Room[];
+  isNightMode?: boolean;
+}
+
+export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({ rooms, isNightMode = false }) => {
+  const [selectedFloor, setSelectedFloor] = useState(0);
+
+  const floors = useMemo(() => {
+    const floorSet = new Set(rooms.map(r => r.floor ?? 0));
+    return Array.from(floorSet).sort((a, b) => a - b);
+  }, [rooms]);
+
+  const filteredRooms = useMemo(() => {
+    return rooms.filter(r => (r.floor ?? 0) === selectedFloor);
+  }, [rooms, selectedFloor]);
+
+  if (!rooms || rooms.length === 0) return null;
+
+  // Calculate bounds for the selected floor
+  const minX = filteredRooms.length > 0 ? Math.min(...filteredRooms.map(r => r.x - r.width / 2)) : 0;
+  const maxX = filteredRooms.length > 0 ? Math.max(...filteredRooms.map(r => r.x + r.width / 2)) : 10;
+  const minZ = filteredRooms.length > 0 ? Math.min(...filteredRooms.map(r => r.z - r.depth / 2)) : 0;
+  const maxZ = filteredRooms.length > 0 ? Math.max(...filteredRooms.map(r => r.z + r.depth / 2)) : 10;
+
+  const width = maxX - minX;
+  const height = maxZ - minZ;
+  const padding = 2;
+  
+  const viewBox = `${minX - padding} ${minZ - padding} ${width + padding * 2} ${height + padding * 2}`;
+
+  const getRoomColor = (type: Room['type']) => {
+    if (isNightMode) {
+      switch (type) {
+        case 'living': return '#451a03';
+        case 'bedroom': return '#064e3b';
+        case 'kitchen': return '#450a0a';
+        case 'bathroom': return '#082f49';
+        case 'dining': return '#431407';
+        case 'hallway': return '#0f172a';
+        case 'garage': return '#1e293b';
+        case 'stairs': return '#2e1065';
+        case 'elevator': return '#4a044e';
+        default: return '#000000';
+      }
+    }
+    switch (type) {
+      case 'living': return '#fef3c7';
+      case 'bedroom': return '#ecfdf5';
+      case 'kitchen': return '#fff7ed';
+      case 'bathroom': return '#eff6ff';
+      case 'dining': return '#fff1f2';
+      case 'hallway': return '#f8fafc';
+      case 'garage': return '#f1f5f9';
+      case 'stairs': return '#ddd6fe';
+      case 'elevator': return '#fae8ff';
+      default: return '#ffffff';
+    }
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center p-4">
+      {floors.length > 1 && (
+        <div className="flex gap-2 mb-4">
+          {floors.map(floor => (
+            <button
+              key={floor}
+              onClick={() => setSelectedFloor(floor)}
+              className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+                selectedFloor === floor 
+                ? 'bg-brand text-white shadow-lg shadow-brand/20' 
+                : 'bg-app-surface text-app-text/60 border border-app-border hover:border-brand/30'
+              }`}
+            >
+              <Layers className="w-3 h-3" />
+              {floor === 0 ? 'Ground Floor' : `Floor ${floor}`}
+            </button>
+          ))}
+        </div>
+      )}
+      
+      <div className="w-full flex-1 flex items-center justify-center min-h-0">
+        <svg
+          viewBox={viewBox}
+          className="w-full h-full max-h-[500px]"
+          style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}
+        >
+          {filteredRooms.map((room, i) => (
+            <motion.g 
+              key={i}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.05 }}
+            >
+              <motion.rect
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 1, ease: "easeInOut", delay: i * 0.1 }}
+                x={room.x - room.width / 2}
+                y={room.z - room.depth / 2}
+                width={room.width}
+                height={room.depth}
+                fill={getRoomColor(room.type)}
+                stroke={isNightMode ? "#334155" : "#475569"}
+                strokeWidth="0.05"
+              />
+              <motion.text
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                x={room.x}
+                y={room.z}
+                fontSize="0.3"
+                fontWeight="bold"
+                textAnchor="middle"
+                fill={isNightMode ? "#ffffff" : "#000000"}
+                style={{ pointerEvents: 'none' }}
+              >
+                {room.name}
+              </motion.text>
+              <motion.text
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 + i * 0.1 }}
+                x={room.x}
+                y={room.z + 0.3}
+                fontSize="0.2"
+                textAnchor="middle"
+                fill={isNightMode ? "#94a3b8" : "#000000"}
+                style={{ pointerEvents: 'none' }}
+              >
+                {room.width}m x {room.depth}m
+              </motion.text>
+            </motion.g>
+          ))}
+        </svg>
+      </div>
+    </div>
+  );
+};

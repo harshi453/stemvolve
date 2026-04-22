@@ -1,0 +1,5 @@
+{
+  "name": "Draft",
+  "description": "Quickly generate 3D house layouts and reimagined interior designs.",
+  "requestFramePermissions": ["camera", "geolocation"]
+}

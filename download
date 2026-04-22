@@ -1,0 +1,449 @@
+import React, { useContext, useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Check, Zap, Crown, Star, ArrowRight, Sparkles, LucideIcon, X, Minus, CreditCard, Lock, ShieldCheck, Globe, Loader2 } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { PlanContext } from '../App';
+import { PlanType } from '../types';
+import { loadStripe } from '@stripe/stripe-js';
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js';
+
+// Initialize Stripe
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
+
+interface PlanProps {
+  id: PlanType;
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  icon: LucideIcon;
+  isPopular?: boolean;
+  color: string;
+  onSelect: (id: PlanType) => void;
+  isCurrent: boolean;
+}
+
+const StripeCheckoutForm: React.FC<{
+  plan: any;
+  onClose: () => void;
+  onConfirm: (id: PlanType) => void;
+  region: string;
+}> = ({ plan, onClose, onConfirm, region }) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [clientSecret, setClientSecret] = useState('');
+
+  useEffect(() => {
+    // Create PaymentIntent as soon as the component loads
+    const amount = parseFloat(plan.price.replace(/[^0-9.]/g, ''));
+    if (isNaN(amount)) return;
+
+    fetch('/api/create-payment-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, planId: plan.id }),
+    })
+      .then((res) => res.json())
+      .then((data) => setClientSecret(data.clientSecret))
+      .catch(err => console.error("Failed to fetch client secret", err));
+  }, [plan]);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!stripe || !elements || !clientSecret) {
+      return;
+    }
+
+    setProcessing(true);
+
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) return;
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
+      },
+    });
+
+    if (result.error) {
+      setError(result.error.message || 'An error occurred');
+      setProcessing(false);
+    } else {
+      if (result.paymentIntent.status === 'succeeded') {
+        onConfirm(plan.id);
+      }
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <div className="p-4 bg-app-bg border border-app-border rounded-xl">
+          <CardElement 
+            options={{
+              style: {
+                base: {
+                  fontSize: '16px',
+                  color: '#ffffff',
+                  '::placeholder': {
+                    color: '#aab7c4',
+                  },
+                },
+                invalid: {
+                  color: '#9e2146',
+                },
+              },
+            }}
+          />
+        </div>
+        {error && <div className="text-red-500 text-xs font-bold">{error}</div>}
+      </div>
+
+      <div className="space-y-6 py-4">
+        <div className="p-6 bg-brand/5 border border-brand/20 rounded-3xl text-center">
+          <ShieldCheck className="w-12 h-12 text-brand mx-auto mb-4" />
+          <h3 className="text-xl font-bold mb-2">Secure Verification</h3>
+          <p className="text-sm text-app-text/60">Your payment information is encrypted and processed securely via Stripe.</p>
+        </div>
+        <div className="flex items-center justify-between p-4 bg-app-bg border border-app-border rounded-2xl">
+          <span className="text-sm font-bold">Total Amount</span>
+          <span className="text-xl font-black text-brand">{plan.price}</span>
+        </div>
+      </div>
+
+      <div className="flex gap-3 pt-4">
+        <button 
+          type="button"
+          onClick={onClose}
+          className="flex-1 py-4 bg-app-bg border border-app-border text-app-text rounded-2xl font-bold hover:bg-app-surface transition-all"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit"
+          disabled={!stripe || processing || !clientSecret}
+          className="flex-[2] py-4 bg-brand text-white rounded-2xl font-bold hover:bg-brand-dark transition-all shadow-xl shadow-brand/20 flex items-center justify-center gap-2 disabled:opacity-50"
+        >
+          {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : "Confirm Payment"}
+          {!processing && <ArrowRight className="w-5 h-5" />}
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const CheckoutModal: React.FC<{ 
+  plan: any; 
+  onClose: () => void; 
+  onConfirm: (id: PlanType) => void;
+  region: string;
+}> = ({ plan, onClose, onConfirm, region }) => {
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="bg-app-surface border border-app-border rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl relative overflow-hidden"
+      >
+        <button onClick={onClose} className="absolute top-6 right-6 p-2 text-app-text/40 hover:text-app-text transition-colors">
+          <X className="w-6 h-6" />
+        </button>
+
+        <div className="mb-8">
+          <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg", plan.color)}>
+            <plan.icon className="w-6 h-6 text-white" />
+          </div>
+          <h2 className="text-3xl font-black tracking-tighter">Billing Setup</h2>
+          <p className="text-app-text/60">Complete your subscription to <span className="text-brand font-bold">{plan.name}</span></p>
+        </div>
+
+        <Elements stripe={stripePromise}>
+          <StripeCheckoutForm plan={plan} onClose={onClose} onConfirm={onConfirm} region={region} />
+        </Elements>
+      </motion.div>
+    </div>
+  );
+};
+
+const PlanCard: React.FC<PlanProps> = ({ id, name, price, description, features, icon: Icon, isPopular, color, onSelect, isCurrent }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    className={cn(
+      "relative p-8 rounded-3xl border transition-all duration-500 flex flex-col h-full",
+      isCurrent ? "border-brand ring-2 ring-brand/20 bg-brand/5" : (
+        isPopular 
+        ? "bg-app-surface border-brand shadow-2xl shadow-brand/10 scale-105 z-10" 
+        : "bg-app-surface border-app-border hover:border-brand/30 shadow-xl"
+      )
+    )}
+  >
+    {isCurrent && (
+      <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+        Your Current Plan
+      </div>
+    )}
+    {!isCurrent && isPopular && (
+      <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+        Most Popular
+      </div>
+    )}
+
+    <div className="mb-8">
+      <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg", color)}>
+        <Icon className="w-8 h-8 text-white" />
+      </div>
+      <h3 className="text-2xl font-bold text-app-text mb-2">{name}</h3>
+      <p className="text-app-text/60 text-sm leading-relaxed">{description}</p>
+    </div>
+
+    <div className="mb-8">
+      <div className="flex items-baseline gap-1">
+        <span className="text-4xl font-black text-app-text">{price}</span>
+        {price !== "Free" && <span className="text-app-text/40 font-medium">/project</span>}
+      </div>
+    </div>
+
+    <div className="space-y-6 mb-10 flex-1">
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-widest text-brand mb-3">Key Features</p>
+        <div className="space-y-3">
+          {features.map((feature, idx) => (
+            <div key={idx} className="flex items-start gap-3">
+              <Check className="w-4 h-4 text-brand shrink-0 mt-0.5" />
+              <span className="text-sm text-app-text/80">{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <button 
+      onClick={() => onSelect(id)}
+      disabled={isCurrent}
+      className={cn(
+        "w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group",
+        isCurrent ? "bg-app-bg text-app-text/40 cursor-default" : (
+          isPopular 
+          ? "bg-brand text-white hover:bg-brand-dark shadow-lg shadow-brand/20" 
+          : "bg-app-bg text-app-text hover:bg-app-surface border border-app-border hover:border-brand/50"
+        )
+      )}
+    >
+      {isCurrent ? "Active Plan" : "Get Started"}
+      {!isCurrent && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+    </button>
+  </motion.div>
+);
+
+export const PricingSection: React.FC<{ showHeader?: boolean }> = ({ showHeader = true }) => {
+  const { plan: currentPlan, setPlan, region, setShowContacts } = useContext(PlanContext);
+  const [selectedPlanForCheckout, setSelectedPlanForCheckout] = useState<any>(null);
+  
+  const getPrice = (planId: PlanType) => {
+    if (planId === 'standard') return "Free";
+    
+    const prices = {
+      professional: { US: '$14.99', EU: '€14.99', UK: '£11.99', IN: '₹599' },
+      premium: { US: '$29.99', EU: '€29.99', UK: '£24.99', IN: '₹1199' }
+    };
+
+    const r = region || 'US';
+    return prices[planId as keyof typeof prices][r as keyof (typeof prices)['professional']] || prices[planId as keyof typeof prices]['US'];
+  };
+
+  const plans: Omit<PlanProps, 'onSelect' | 'isCurrent'>[] = [
+    {
+      id: 'standard',
+      name: "Standard",
+      price: getPrice('standard'),
+      description: "Perfect for exploring basic architectural concepts and simple room layouts.",
+      icon: Star,
+      color: "bg-blue-500",
+      features: [
+        "Up to 2-floor layouts",
+        "Up to 3 bedrooms and 3 bathrooms",
+        "5 3D visualizations per month",
+        "Interior AI: 8 per month",
+        "Limit of 3 projects per month",
+        "Standard furniture set"
+      ]
+    },
+    {
+      id: 'professional',
+      name: "Professional",
+      price: getPrice('professional'),
+      isPopular: true,
+      description: "Ideal for homeowners and interior designers working on serious renovation projects.",
+      icon: Zap,
+      color: "bg-brand",
+      features: [
+        "Up to 5-floor layouts",
+        "Up to 6 bedrooms and 6 bathrooms",
+        "Limit to 25 projects per month",
+        "15 Interior AI projects",
+        "Advanced 3D explorable mode",
+        "Full premium furniture library",
+        "Priority processing"
+      ]
+    },
+    {
+      id: 'premium',
+      name: "Premium",
+      price: getPrice('premium'),
+      description: "The ultimate toolkit for architectural firms and real estate developers.",
+      icon: Crown,
+      color: "bg-purple-600",
+      features: [
+        "Unlimited floors",
+        "Unlimited bedrooms and bathrooms",
+        "Unlimited projects",
+        "Unlimited Interior AI projects",
+        "Custom material textures",
+        "BIM data export",
+        "Team collaboration tools"
+      ]
+    }
+  ];
+
+  const comparisonFeatures = [
+    { name: "Max Floors", standard: "2", pro: "5", premium: "Unlimited" },
+    { name: "Bedrooms/Bathrooms", standard: "3 / 3", pro: "6 / 6", premium: "Unlimited" },
+    { name: "Projects / month", standard: "3", pro: "25", premium: "Unlimited" },
+    { name: "3D Visualizations / month", standard: "5", pro: "Unlimited", premium: "Unlimited" },
+    { name: "Interior AI / month", standard: "8", pro: "15", premium: "Unlimited" },
+    { name: "Furniture Library", standard: "Standard", pro: "Premium", premium: "Exclusive" },
+  ];
+
+  return (
+    <div className="max-w-7xl mx-auto px-6 py-20">
+      <AnimatePresence>
+        {selectedPlanForCheckout && (
+          <CheckoutModal 
+            plan={selectedPlanForCheckout} 
+            region={region || 'US'}
+            onClose={() => setSelectedPlanForCheckout(null)}
+            onConfirm={(id) => {
+              setPlan(id);
+              setSelectedPlanForCheckout(null);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {showHeader && (
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-black uppercase tracking-widest mb-6"
+          >
+            <Sparkles className="w-4 h-4" />
+            Pricing & Plans
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-5xl md:text-6xl font-black tracking-tighter mb-6 leading-tight"
+          >
+            Choose the perfect plan for your <span className="text-brand">vision</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl text-app-text/60 leading-relaxed"
+          >
+            Whether you're sketching a dream home or managing a complex development, we have the tools to bring your ideas to life.
+          </motion.p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-32">
+        {plans.map((plan, idx) => (
+          <PlanCard 
+            key={idx} 
+            {...plan} 
+            onSelect={(id) => {
+              const fullPlan = plans.find(p => p.id === id);
+              setSelectedPlanForCheckout(fullPlan);
+            }} 
+            isCurrent={currentPlan === plan.id} 
+          />
+        ))}
+      </div>
+
+      {/* Comparison Table */}
+      <div className="mb-32">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Detailed Comparison</h2>
+          <p className="text-app-text/60">Compare every feature across our plans to find the right fit.</p>
+        </div>
+
+        <div className="bg-app-surface border border-app-border rounded-[2rem] overflow-hidden shadow-xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-app-bg/50">
+                  <th className="p-6 text-sm font-bold text-app-text/40 uppercase tracking-widest border-b border-app-border">Feature</th>
+                  <th className="p-6 text-sm font-bold text-app-text/40 uppercase tracking-widest border-b border-app-border text-center">Standard</th>
+                  <th className="p-6 text-sm font-bold text-brand uppercase tracking-widest border-b border-app-border text-center">Professional</th>
+                  <th className="p-6 text-sm font-bold text-app-text/40 uppercase tracking-widest border-b border-app-border text-center">Premium</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonFeatures.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-app-bg/30 transition-colors">
+                    <td className="p-6 border-b border-app-border font-medium text-app-text">{row.name}</td>
+                    <td className="p-6 border-b border-app-border text-center text-app-text/60">{row.standard}</td>
+                    <td className="p-6 border-b border-app-border text-center font-bold text-app-text">{row.pro}</td>
+                    <td className="p-6 border-b border-app-border text-center text-app-text/60">{row.premium}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="p-12 rounded-[3rem] bg-app-surface border border-app-border text-center relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 blur-[100px] -mr-32 -mt-32" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/5 blur-[100px] -ml-32 -mb-32" />
+        
+        <h2 className="text-3xl font-bold mb-6 relative z-10">Need a custom enterprise solution?</h2>
+        <p className="text-app-text/60 max-w-2xl mx-auto mb-10 relative z-10">
+          For large-scale developers and architectural firms, we offer custom API access, on-premise deployments, and specialized AI training.
+        </p>
+        <button 
+          onClick={() => setShowContacts(true)}
+          className="px-8 py-4 bg-app-text text-app-bg rounded-2xl font-bold hover:opacity-90 transition-all relative z-10"
+        >
+          Contact Sales Team
+        </button>
+      </motion.div>
+    </div>
+  );
+};
+
+export const PricingPage: React.FC = () => {
+  return (
+    <div className="h-full bg-app-bg text-app-text overflow-y-auto">
+      <PricingSection />
+    </div>
+  );
+};

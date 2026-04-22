@@ -1,0 +1,122 @@
+export interface HouseIdea {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  source: string;
+  url: string;
+  tags: string[];
+}
+
+const styles = [
+  { name: 'Modern', tags: ['Modern', 'Glass', 'Sleek'] },
+  { name: 'Victorian', tags: ['Victorian', 'Classic', 'Ornate'] },
+  { name: 'Craftsman', tags: ['Craftsman', 'Wood', 'Traditional'] },
+  { name: 'Tudor', tags: ['Tudor', 'Historic', 'Brick'] },
+  { name: 'Mediterranean', tags: ['Mediterranean', 'Villa', 'Warm'] },
+  { name: 'Contemporary', tags: ['Contemporary', 'Bold', 'Unique'] },
+  { name: 'Colonial', tags: ['Colonial', 'Stately', 'Symmetric'] },
+  { name: 'Farmhouse', tags: ['Farmhouse', 'Rustic', 'Cozy'] },
+  { name: 'Ranch', tags: ['Ranch', 'Single-Story', 'Open'] },
+  { name: 'Cottage', tags: ['Cottage', 'Charming', 'Garden'] },
+  { name: 'Chalet', tags: ['Chalet', 'Alpine', 'Timber'] },
+  { name: 'Cabin', tags: ['Cabin', 'Forest', 'Rustic'] },
+  { name: 'Loft', tags: ['Loft', 'Industrial', 'Urban'] },
+  { name: 'Brutalist', tags: ['Brutalist', 'Concrete', 'Bold'] },
+  { name: 'Japandi', tags: ['Japandi', 'Zen', 'Minimalist'] },
+  { name: 'Mid-Century Modern', tags: ['MCM', 'Retro', 'Nature'] },
+  { name: 'Art Deco', tags: ['Art Deco', 'Geometric', 'Glamorous'] },
+  { name: 'Cape Cod', tags: ['Cape Cod', 'Coastal', 'Classic'] },
+  { name: 'Greek Revival', tags: ['Greek Revival', 'Column', 'Historic'] },
+  { name: 'Italianate', tags: ['Italianate', 'Elegant', 'Classic'] },
+  { name: 'Queen Anne', tags: ['Queen Anne', 'Ornate', 'Colorful'] },
+  { name: 'Shingle Style', tags: ['Shingle', 'Coastal', 'Rustic'] },
+  { name: 'Spanish Colonial', tags: ['Spanish', 'Stucco', 'Warm'] },
+  { name: 'French Provincial', tags: ['French', 'Elegant', 'Stone'] },
+  { name: 'Georgian', tags: ['Georgian', 'Brick', 'Symmetric'] },
+  { name: 'Neoclassical', tags: ['Neoclassical', 'Grand', 'Historic'] },
+  { name: 'Pueblo', tags: ['Pueblo', 'Adobe', 'Desert'] },
+  { name: 'Saltbox', tags: ['Saltbox', 'Historic', 'Timber'] },
+  { name: 'Shotgun', tags: ['Shotgun', 'Narrow', 'Urban'] },
+  { name: 'Split-Level', tags: ['Split-Level', 'Modern', 'Functional'] },
+  { name: 'Stick Style', tags: ['Stick', 'Victorian', 'Wood'] },
+  { name: 'Storybook', tags: ['Storybook', 'Whimsical', 'Unique'] },
+  { name: 'Territorial', tags: ['Territorial', 'Desert', 'Adobe'] },
+  { name: 'Townhouse', tags: ['Townhouse', 'Urban', 'Vertical'] },
+  { name: 'Treehouse', tags: ['Treehouse', 'Nature', 'Whimsical'] },
+  { name: 'Underground', tags: ['Underground', 'Eco', 'Unique'] },
+  { name: 'Tiny House', tags: ['Tiny', 'Minimalist', 'Eco'] },
+  { name: 'Shipping Container', tags: ['Container', 'Industrial', 'Eco'] },
+  { name: 'Yurt', tags: ['Yurt', 'Nomadic', 'Circular'] },
+  { name: 'Dome House', tags: ['Dome', 'Geometric', 'Future'] },
+  { name: 'Floating House', tags: ['Floating', 'Water', 'Unique'] },
+  { name: 'Lighthouse', tags: ['Lighthouse', 'Coastal', 'Historic'] },
+  { name: 'Castle', tags: ['Castle', 'Grand', 'Stone'] },
+  { name: 'Manor', tags: ['Manor', 'Stately', 'Estate'] },
+  { name: 'Estate', tags: ['Estate', 'Luxury', 'Grand'] },
+  { name: 'Villa', tags: ['Villa', 'Luxury', 'Warm'] },
+  { name: 'Penthouse', tags: ['Penthouse', 'Luxury', 'Urban'] },
+  { name: 'Bungalow', tags: ['Bungalow', 'Cozy', 'Classic'] },
+  { name: 'Adobe', tags: ['Adobe', 'Desert', 'Traditional'] },
+  { name: 'Glass House', tags: ['Glass', 'Modern', 'Transparent'] }
+];
+
+const adjectives = ['Stunning', 'Elegant', 'Rustic', 'Modern', 'Cozy', 'Grand', 'Minimalist', 'Charming', 'Bold', 'Sleek'];
+const sources = ['Pinterest', 'Google Images', 'ArchDaily', 'Dwell', 'Houzz'];
+
+const unsplashIds = [
+  '1580587771525-78b9dba3b914', '1512917774080-9991f1c4c750', '1560448204-e02f11c3d0e2', 
+  '1616486338812-3dadae4b4ace', '1518780664697-55e3ad937233', '1564013799919-ab600027ffc6',
+  '1499696010180-025ef6e1a8f9', '1470770841072-f978cf4d019e', '1570129477492-45c003edd2be',
+  '1500382017468-9049fed747ef', '1449156001446-d41647799a17', '1480074568708-e7b720bb3f09',
+  '1432316858286-de7b61d4601c', '1513584684031-43d154c314c4', '1523217582562-09d0def993a6',
+  '1505843513577-22bb7d21e455', '1510798831971-661eb04b3739', '1516455590571-18256e5bb9ff',
+  '1519302959554-a75be0afc82a', '1522708323590-d24dbb6b0267', '1531971589569-0d93c595c894',
+  '1542718610-a1d656d1884c', '1554995207-c18c203602cb', '1568605114967-8130f3a36994',
+  '1572120360610-d971b9d7767c', '1575517111478-7f6afd0973bb', '1582268611958-ebfd161ef9cf',
+  '1583608205776-bfd35f0d9f83', '1584622650111-993a426fbf0a', '1585412727339-54e42f03468b',
+  '1588880331179-bc9b93a8c5c8', '1591474200742-8e512e3f94e8', '1592595825381-770eafc6d28b',
+  '1593693397690-362cb9666ec2', '1595526114035-0d45ed16cfbf', '1597047084840-6997ec603e41',
+  '1598228723793-52759bba239c', '1599809201702-621ac2096a18', '1600210492486-dfba20a3466a',
+  '1600566484353-b20bb1d786c3', '1600585152223-f7e656c0fd3d', '1600602842063-fcc1968c27a0',
+  '1600918819133-f24b4248a6b8', '1602075433058-28371bf13342', '1602675854203-ee83f83abc95',
+  '1602941328162-7270c7a7bb39', '1603274733319-f6a7443fe35c', '1605141817777-0602d5578587',
+  '1605276063048-181932e0ee5c', '1605538038931-36443391863b', '1605801328461-bb3932c1a9a4',
+  '1606040394035-11588348843b', '1606046604412-8224e9e900c9', '1606190815582-844a956e3639',
+  '1606376527034-282416443553', '1606744840856-d99d3e35031b', '1607371366580-2d5d07494852',
+  '1607431781538-c8d404d3a4c8', '1607593794317-15999c18ee8d', '1607944024285-2e1784de21bd',
+  '1608086702611-72967877d449', '1608248508402-4d52a85f6e73', '1608306448102-f0af92bc5f3b',
+  '1608511546217-41ca25a1b23b', '1608636208310-74917291880c', '1608914438122-83c83b1ad8c6',
+  '1609109240104-59999c60d8a6', '1609159064303-3be2875c70a2', '1609348746962-aa3d92c90453',
+  '1609387502999-1caec3f902c3', '1609765114197-48af1a07e7d5', '1609949000187-af5f1d79e20e',
+  '1610007974306-18f36cba3223', '1610116306798-191250f74ba4', '1610212560839-3c307babd13e',
+  '1610348728835-54441242f750', '1610404724561-f40058e35a83', '1610537462399-79223e429390',
+  '1610549402293-d40d933299c8', '1610622300414-25fe04f3530e', '1610708573702-036973ecd518',
+  '1610819019944-6375785f1222', '1610894541487-02c58b3cc44e', '1610966231661-be514097125b',
+  '1611060471713-db5b91c73843', '1611138776952-f150c4608ca8', '1611244419372-bb975007da3e',
+  '1611316249477-047339154420', '1611414705307-212fd01b5f9a', '1611506111158-dc3629a2933c',
+  '1611590524662-504a0cb2a04d', '1611674497539-74a4b0d20351', '1611758525451-4193c9c21bd2',
+  '1611842521118-88d70ee5fd90', '1611926521118-88d70ee5fd90', '1612010521118-88d70ee5fd90',
+  '1612094521118-88d70ee5fd90', '1612178521118-88d70ee5fd90', '1612262521118-88d70ee5fd90',
+  '1612346521118-88d70ee5fd90'
+];
+
+export const HOUSE_IDEAS: HouseIdea[] = Array.from({ length: 100 }, (_, i) => {
+  const style = styles[i % styles.length];
+  const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const source = sources[Math.floor(Math.random() * sources.length)];
+  const id = (i + 1).toString();
+  const unsplashId = unsplashIds[i % unsplashIds.length];
+  
+  return {
+    id,
+    title: `${adj} ${style.name} ${i % 2 === 0 ? 'Home' : 'Villa'}`,
+    description: `A beautiful example of ${style.name} architecture featuring ${style.tags.join(', ')} elements.`,
+    image: `https://images.unsplash.com/photo-${unsplashId}?auto=format&fit=crop&w=800&q=80&sig=${id}`,
+    source,
+    url: source === 'Pinterest' 
+      ? `https://www.pinterest.com/search/pins/?q=${encodeURIComponent(style.name + ' house design')}`
+      : `https://www.google.com/search?q=${encodeURIComponent(style.name + ' house architecture')}&tbm=isch`,
+    tags: style.tags
+  };
+});
